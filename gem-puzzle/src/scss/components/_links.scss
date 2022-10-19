@@ -1,0 +1,13 @@
+.nav-link {
+  @include text($weight: 500);
+  color: $colorWhite;
+
+  &:hover,
+  &:active {
+    color: $colorOrange;
+  }
+}
+
+.active-link {
+  color: $colorOrange;
+}

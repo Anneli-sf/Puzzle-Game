@@ -1,0 +1,100 @@
+@mixin flex-row($justify: space-between, $align: center) {
+  display: flex;
+  flex-direction: row;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin flex-column($justify: space-between, $align: center) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+// @mixin border($width: 1px, $radius: 2px) {
+//   border: $width solid;
+//   border-radius: $radius;
+// }
+
+// @mixin text($size: 1rem, $weight: 400, $height: 1.4, $align: center) {
+//   font-size: $size;
+//   font-weight: $weight;
+//   line-height: $height;
+//   text-align: $align;
+// }
+
+//---------------transition
+
+@mixin transition-slow {
+    
+    transition: all 1s ease-in-out;
+}
+
+//-------------------media
+
+// @mixin for-desktop {
+//   @media (min-width: (1025px)) {
+//     @content;
+//   }
+// }
+
+// @mixin big-desktop {
+//     @media (max-width: (1599px)) {
+//       @content;
+//     }
+//   }
+
+// @mixin big-desktop-1440 {
+//   @media (max-width: (1440px)) {
+//     @content;
+//   }
+// }
+
+// @mixin small-desktop-1220 {
+//     @media (max-width: (1220px)) {
+//       @content;
+//     }
+//   }
+
+// @mixin small-desktop {
+//   @media (max-width: (999px)) {
+//     @content;
+//   }
+// }
+
+@mixin medium {
+  @media (max-width: (768px)) { 
+    @content;
+  }
+}
+
+@mixin small {
+  @media (max-width: (576px)) { 
+    @content;
+  }
+}
+
+@mixin extra-small {
+  @media (max-width: (430px)) { 
+    @content;
+  }
+}
+
+// @mixin tablet-648 {
+//   @media (max-width: (648px)) { 
+//     @content;
+//   }
+// }
+
+// @mixin tablet {
+//   @media (max-width: (639px)) { 
+//     @content;
+//   }
+// }
+
+// @mixin mobile {
+//   @media (max-width: (320px)) {
+//     @content;
+//   }
+// }

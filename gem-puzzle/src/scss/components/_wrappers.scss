@@ -1,0 +1,13 @@
+.page-container {
+  margin: 0 auto;
+  max-width: 1600px;
+  width: 100%;
+  height: 100vh;
+
+  @include flex-column();
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
