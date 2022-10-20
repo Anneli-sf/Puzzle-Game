@@ -8,10 +8,6 @@ const SOUND = new Audio(
   "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3"
 );
 
-
-
-
-
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
 let arrStart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -27,9 +23,15 @@ createBody(matrix);
 
 const NEW_GAME = document.getElementById("new-game");
 const GAME = document.getElementById("game");
+
 const SOUND_BTN = document.getElementById("flexSwitchCheckReverse");
 
 SOUND_BTN.checked = true;
+
+// document.addEventListener("click", () => {
+//   timer();
+// });
+timer();
 
 // let matrixNew;
 
@@ -38,16 +40,25 @@ NEW_GAME.addEventListener("click", () => {
   shuffledArray = shuffle(arrStart);
   matrix = getMatrix(shuffledArray);
   newPosition(matrix, GAME);
+  // stopTimer();
+  // startTimer();
+
+  // timer();
 });
 
-//-----клик по кнопке c цифрой
+
+
+//-----клик по кнопке c цифрой в ИГРЕ
 
 GAME.addEventListener("click", (e) => {
+  
   const CURR_BTN = e.target.closest(".square");
   const BTN_NUM = +CURR_BTN.id.slice(0, -2);
   const BTN_COORD = getPosition(BTN_NUM, matrix);
   const EMPTY_BTN_COORD = getPosition(16, matrix);
   const ableMove = isAbleToMove(BTN_COORD, EMPTY_BTN_COORD);
+
+  
 
   if (ableMove) {
     moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
@@ -55,10 +66,15 @@ GAME.addEventListener("click", (e) => {
     if (SOUND_BTN.checked == true) {
       SOUND.play();
     }
-    
   }
 
-  if (JSON.stringify(matrix) == JSON.stringify(startMatrix)) console.log("win"); //победил?
+  const COUNTER = document.getElementById('moves');
+  COUNTER.value = parseInt(COUNTER.value) + 1;
+
+
+
+  if (JSON.stringify(matrix) == JSON.stringify(startMatrix))
+    alert("you're winner!"); //победил?
   // console.log(matrix);
   // console.log(startMatrix);
 });
@@ -117,13 +133,11 @@ function createHeader() {
   return HEADER;
 }
 
-
-  /* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
-  // <div class="form-check form-switch">
-  //              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-  //              <label class="form-check-label" for="flexSwitchCheckChecked">Sound</label>
-  //             </div>
-
+/* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
+// <div class="form-check form-switch">
+//              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+//              <label class="form-check-label" for="flexSwitchCheckChecked">Sound</label>
+//             </div>
 
 function createFooter() {
   let FOOTER = document.createElement("footer");
@@ -151,11 +165,27 @@ function createMainSection() {
   mainSection.classList.add("container-fluid");
   mainSection.id = "main";
   mainSection.innerHTML = `
-  <div class="form-check form-switch form-check-reverse">
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckReverse">
-                <label class="form-check-label" for="flexSwitchCheckReverse">Sound</label>
-              </div>
-  `
+  <div class="game-info">
+      <div class="form-check form-switch form-check-reverse">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckReverse">
+          <label class="form-check-label" for="flexSwitchCheckReverse">Sound</label>
+      </div>
+
+      <div class="timer">
+          <p class="timer-title">Time</p>
+          <input class="time" type="text" value="00" id="hours">
+          <span>min</span>
+          <p>:</p>
+          <span>sec</span>
+          <input class="time" type="text" value="00" id="minutes">
+      </div>
+
+      <div class="moves">
+          <p class="moves-title">Moves</p>
+          <input class="move" type="text" value="0" id="moves">
+      </div>
+  </div>   
+  `;
 
   const GAME = document.createElement("div");
   GAME.id = "game";
@@ -178,8 +208,6 @@ function createBody(matrix) {
 
   document.querySelector("#game").append(createItems(matrix));
   document.getElementById("16id").style.display = "none";
-
-  
 }
 
 //------------------------новая игра---------------------------
@@ -218,7 +246,37 @@ function moveBTN(pos1, pos2, matr) {
   matr[pos2.y][pos2.x] = itemPos;
 }
 
-//---------------ЗВУК--------------
-// SOUND_BTN.addEventListener('click', () => {
+//---------------ТАЙМЕР--------------
+function timer() {
+  let hour = document.getElementById("hours");
+  let minute = document.getElementById("minutes");
 
-// })
+  minute.value = parseInt(minute.value) + 1;
+
+  if (minute.value > 59) {
+    hour.value = parseInt(hour.value) + 1;
+    minute.value = "00";
+  }
+
+  if (hour.value < 30) {
+    window.setTimeout(timer, 1000);
+  } else alert("sorry. time is out");
+
+  NEW_GAME.addEventListener("click", () => {
+    minute.value = "00";
+    hour.value = "00";
+  });
+}
+
+// function startTimer() {
+//   window.TimerId = window.setInterval(timer, 1000);
+// }
+
+// function stopTimer() {
+//   window.clearInterval(window.TimerId);
+
+// }
+
+
+
+

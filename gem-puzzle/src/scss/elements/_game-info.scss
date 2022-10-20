@@ -1,0 +1,124 @@
+.game-info {
+  margin-bottom: 20px;
+  @include flex-row();
+  width: 100%;
+
+  @include medium {
+    @include flex-column($align: flex-start);
+  }
+
+  .timer {
+    @include flex-row();
+    font-size: 2rem;
+
+    @include small {
+      font-size: 1.5rem;
+    }
+
+    @include extra-small {
+      font-size: 1.2rem;
+    }
+
+    .timer-title {
+      margin-bottom: 0rem;
+      margin-right: 0.2em;
+      color: #2196f3;
+
+      @include extra-small {
+        margin-right: 0px;
+      }
+    }
+
+    .time {
+      border: none;
+      width: 40px;
+      text-align: center;
+    }
+
+    span {
+      margin: 0px 0.1em;
+      font-size: smaller;
+    }
+
+    p {
+      // margin-right: 5px;
+      // margin-left: 5px;
+      margin-bottom: 0rem;
+    }
+  }
+
+  .moves {
+    @include flex-row();
+    font-size: 2rem;
+
+    @include small {
+      font-size: 1.5rem;
+    }
+
+    @include extra-small {
+      font-size: 1.2rem;
+    }
+    .move {
+      border: none;
+      width: 40px;
+      text-align: center;
+    }
+
+    .moves-title {
+      margin-bottom: 0rem;
+      margin-right: 0.2em;
+      color: #673ab7;
+
+      @include extra-small {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+
+.form-switch {
+  @include flex-row();
+
+  @include medium {
+    align-self: flex-end;
+  }
+}
+
+.form-switch .form-check-input {
+  width: 3rem;
+  border: 1px solid #673ab7;
+  @include extra-small {
+    width: 2.5rem;
+  }
+}
+
+.form-check-input {
+  height: 2rem;
+  margin-right: 1em;
+  @include extra-small {
+    height: 1.5rem;
+  }
+}
+
+.form-check-input:checked {
+  background-color: #673ab7;
+}
+
+label {
+  
+  font-size: 2rem;
+  font-weight: 100;
+  color: #673ab7;
+
+  @include medium {
+    font-size: 2rem;
+  }
+
+  @include small {
+    font-size: 1.5rem;
+  }
+
+  @include extra-small {
+    font-size: 1.2rem;
+  }
+}
