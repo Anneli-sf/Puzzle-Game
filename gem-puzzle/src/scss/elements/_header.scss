@@ -1,17 +1,16 @@
 .header {
-  
-  max-height: 15%;
-    height: 100%;
-    padding: 1em 1em;
-    
+  max-height: 17%;
+  height: 100%;
+  padding: 1rem 1rem;
 
   @include flex-row($justify: center);
-  
+
   @include medium {
     font-size: 0.8rem;
   }
 
   @include small {
+    max-height: 30%;
     font-size: 0.6rem;
   }
 
@@ -25,10 +24,13 @@
     gap: 5% 5%;
     @include flex-row($justify: center);
 
-    
+    // @include medium {
+    //   @include flex-row($justify: flex-end);
+    // }
+
+    @include small {
+      @include flex-column($justify: center);
+      gap: 8% 5%;
+    }
   }
-
-
-
 }
-

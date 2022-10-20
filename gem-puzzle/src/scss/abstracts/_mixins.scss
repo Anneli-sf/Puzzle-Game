@@ -30,6 +30,10 @@
     transition: all 0.5s ease-in-out;
 }
 
+@mixin simple-transition {
+  transition: 1s;
+}
+
 //-------------------media
 
 // @mixin for-desktop {

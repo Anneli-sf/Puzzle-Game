@@ -102,12 +102,33 @@
 //---------------------------------------------------other
 .btn-option {
   font-size: 1.5rem;
-  // width: 20%;
+  @include medium {
+    font-size: 1.5rem;
+  }
 
+  @include small {
+    font-size: 1.2rem;
+  }
+
+  @include extra-small {
+    font-size: 1.5rem;
+  }
 }
 
 .btn-nav {
-  font-size: 1.5em;
+  font-size: 2rem;
+
+  @include medium {
+    font-size: 2rem;
+  }
+
+  @include small {
+    font-size: 1.5rem;
+  }
+
+  @include extra-small {
+    font-size: 1.5rem;
+  }
 }
 
 

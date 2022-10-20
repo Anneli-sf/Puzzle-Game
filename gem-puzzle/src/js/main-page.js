@@ -8,42 +8,59 @@ const BODY = document.getElementById("body");
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
 let arrStart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-let shuffledArray = shuffle(arrStart);
-let matrix = getMatrix(shuffledArray);
+// let shuffledArray = shuffle(arrStart);
+// let matrix = getMatrix(shuffledArray);
 
 //------------------------СЛУШАТЕЛИ---------------------------
 
 //------------------------загрузка страницы---------------------------
 
 window.addEventListener("load", () => {
+    let shuffledArray = shuffle(arrStart);
+    let matrix = getMatrix(shuffledArray);
+
   createBody(matrix);
-//   document.querySelector("#game").append(createItems(matrix));
-//   document.getElementById("id16").style.display = "none";
 
   const NEW_GAME = document.getElementById("new-game");
   const GAME = document.getElementById("game");
 
+    
+    let matrixNew;
+
+//-----клик по кнопке НОВАЯ ИГРА
   NEW_GAME.addEventListener("click", () => {
-    let shuffledArray = shuffle(arrStart);
-    let matrixNew = getMatrix(shuffledArray);
-    newGame(matrixNew, GAME);
-    document.getElementById("id16").style.display = "none";
+    shuffledArray = shuffle(arrStart);
+    // matrixNew = getMatrix(shuffledArray);
+    matrix = getMatrix(shuffledArray);
+    newGame(matrix, GAME);
+
+    // return matrixNew;
   });
+
+  console.log('matrix', matrix);
+
+
+  //-----клик по кнопке c цифрой
+
+  const EMPTY_BTN = 'id16';
+  GAME.addEventListener('click', (e) => {
+    const CURR_BTN = e.target.closest('.square');
+    const BTN_NUM = +CURR_BTN.id.slice(0,-2);
+    const BTN_COORD = getCoordinates(BTN_NUM, matrix);
+    
+    // const EMPTY_BTN_COORD = getCoordinates(BTN_NUM, matrixNew);
+    console.log(BTN_COORD);
+    
+  })
 });
 
-//------------------------клик по кнопке НОВАЯ ИГРА---------------------------
-
-function newGame(matrixNew, GAME) {
-  GAME.firstChild.remove();
-  GAME.append(createItems(matrixNew));
-}
 
 //---------------------------------------------создание одного элемента
 
 function createItem(i, x, y) {
   const ITEM = document.createElement("div");
   ITEM.classList.add("square");
-  ITEM.id = `id${i}`;
+  ITEM.id = `${i}id`;
 
   const ITEM_NUMBER = document.createElement("button");
   ITEM_NUMBER.type = "button";
@@ -84,14 +101,16 @@ function createHeader() {
   HEADER.classList.add("container-fluid");
   HEADER.innerHTML = `
         <nav class="nav">
-              <button type="button" class="btn btn-outline-primary" id="new-game">New Game</button>
-              <button type="button" class="btn-nav btn btn-outline-danger">Stop</button>
+              <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
+             
               <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
               <button type="button" class="btn-nav btn btn-outline-success">Results</button>
             </nav>
         `;
   return HEADER;
 }
+
+{/* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */}
 
 function createFooter() {
   let FOOTER = document.createElement("footer");
@@ -138,7 +157,27 @@ function createBody(matrix) {
   mainContainer.append(createMainSection());
   mainContainer.append(createFooter());
 
-    document.querySelector("#game").append(createItems(matrix));
-
-    document.getElementById("id16").style.display = "none";
+  document.querySelector("#game").append(createItems(matrix));
+  document.getElementById("16id").style.display = "none";
 }
+
+
+//------------------------новая игра---------------------------
+function newGame(matrixNew, GAME) {
+    
+    GAME.firstChild.remove();
+    GAME.append(createItems(matrixNew));
+    document.getElementById("16id").style.display = "none";
+
+    
+}
+
+//------------------------игра---------------------------
+
+function getCoordinates(number, mat) {
+    for (let y=0; y < mat.length; y++) {
+        for (let x=0; y< mat[y].length; x++) {
+            if (mat[y][x] == number) return {x, y};
+        }
+    } return null;
+};
