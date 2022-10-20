@@ -28,7 +28,7 @@
     //   @include flex-row($justify: flex-end);
     // }
 
-    @include small {
+    @include extra-small {
       @include flex-column($justify: center);
       gap: 8% 5%;
     }

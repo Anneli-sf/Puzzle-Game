@@ -4,6 +4,13 @@ import { getMatrix } from "./getMatrix";
 //------------------------КОНСТАНТЫ---------------------------
 
 const BODY = document.getElementById("body");
+const SOUND = new Audio(
+  "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3"
+);
+
+
+
+
 
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
@@ -20,6 +27,9 @@ createBody(matrix);
 
 const NEW_GAME = document.getElementById("new-game");
 const GAME = document.getElementById("game");
+const SOUND_BTN = document.getElementById("flexSwitchCheckReverse");
+
+SOUND_BTN.checked = true;
 
 // let matrixNew;
 
@@ -42,11 +52,15 @@ GAME.addEventListener("click", (e) => {
   if (ableMove) {
     moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
     newPosition(matrix, GAME);
+    if (SOUND_BTN.checked == true) {
+      SOUND.play();
+    }
+    
   }
 
-  if (JSON.stringify(matrix) == JSON.stringify(startMatrix)) console.log('win');
-  console.log(matrix);
-  console.log(startMatrix);
+  if (JSON.stringify(matrix) == JSON.stringify(startMatrix)) console.log("win"); //победил?
+  // console.log(matrix);
+  // console.log(startMatrix);
 });
 
 //---------------------------------------------создание одного элемента
@@ -96,17 +110,20 @@ function createHeader() {
   HEADER.innerHTML = `
         <nav class="nav">
               <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
-             
               <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
               <button type="button" class="btn-nav btn btn-outline-success">Results</button>
-            </nav>
+        </nav>
         `;
   return HEADER;
 }
 
-{
+
   /* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
-}
+  // <div class="form-check form-switch">
+  //              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+  //              <label class="form-check-label" for="flexSwitchCheckChecked">Sound</label>
+  //             </div>
+
 
 function createFooter() {
   let FOOTER = document.createElement("footer");
@@ -133,6 +150,12 @@ function createMainSection() {
   mainSection.classList.add("main");
   mainSection.classList.add("container-fluid");
   mainSection.id = "main";
+  mainSection.innerHTML = `
+  <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckReverse">
+                <label class="form-check-label" for="flexSwitchCheckReverse">Sound</label>
+              </div>
+  `
 
   const GAME = document.createElement("div");
   GAME.id = "game";
@@ -155,6 +178,8 @@ function createBody(matrix) {
 
   document.querySelector("#game").append(createItems(matrix));
   document.getElementById("16id").style.display = "none";
+
+  
 }
 
 //------------------------новая игра---------------------------
@@ -187,7 +212,13 @@ function isAbleToMove(pos1, pos2) {
 }
 
 function moveBTN(pos1, pos2, matr) {
+  //перемещение кнопки
   const itemPos = matr[pos1.y][pos1.x];
   matr[pos1.y][pos1.x] = matr[pos2.y][pos2.x];
   matr[pos2.y][pos2.x] = itemPos;
 }
+
+//---------------ЗВУК--------------
+// SOUND_BTN.addEventListener('click', () => {
+
+// })
