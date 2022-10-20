@@ -8,52 +8,46 @@ const BODY = document.getElementById("body");
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
 let arrStart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-// let shuffledArray = shuffle(arrStart);
-// let matrix = getMatrix(shuffledArray);
+let shuffledArray = shuffle(arrStart);
+let matrix = getMatrix(shuffledArray);
+let startMatrix = getMatrix(arrStart);
+console.log(startMatrix);
 
 //------------------------СЛУШАТЕЛИ---------------------------
 
 //------------------------загрузка страницы---------------------------
+createBody(matrix);
 
-window.addEventListener("load", () => {
-    let shuffledArray = shuffle(arrStart);
-    let matrix = getMatrix(shuffledArray);
+const NEW_GAME = document.getElementById("new-game");
+const GAME = document.getElementById("game");
 
-  createBody(matrix);
-
-  const NEW_GAME = document.getElementById("new-game");
-  const GAME = document.getElementById("game");
-
-    
-    let matrixNew;
+// let matrixNew;
 
 //-----клик по кнопке НОВАЯ ИГРА
-  NEW_GAME.addEventListener("click", () => {
-    shuffledArray = shuffle(arrStart);
-    // matrixNew = getMatrix(shuffledArray);
-    matrix = getMatrix(shuffledArray);
-    newGame(matrix, GAME);
-
-    // return matrixNew;
-  });
-
-  console.log('matrix', matrix);
-
-
-  //-----клик по кнопке c цифрой
-
-  const EMPTY_BTN = 'id16';
-  GAME.addEventListener('click', (e) => {
-    const CURR_BTN = e.target.closest('.square');
-    const BTN_NUM = +CURR_BTN.id.slice(0,-2);
-    const BTN_COORD = getCoordinates(BTN_NUM, matrix);
-    
-    // const EMPTY_BTN_COORD = getCoordinates(BTN_NUM, matrixNew);
-    console.log(BTN_COORD);
-    
-  })
+NEW_GAME.addEventListener("click", () => {
+  shuffledArray = shuffle(arrStart);
+  matrix = getMatrix(shuffledArray);
+  newPosition(matrix, GAME);
 });
 
+//-----клик по кнопке c цифрой
+
+GAME.addEventListener("click", (e) => {
+  const CURR_BTN = e.target.closest(".square");
+  const BTN_NUM = +CURR_BTN.id.slice(0, -2);
+  const BTN_COORD = getPosition(BTN_NUM, matrix);
+  const EMPTY_BTN_COORD = getPosition(16, matrix);
+  const ableMove = isAbleToMove(BTN_COORD, EMPTY_BTN_COORD);
+
+  if (ableMove) {
+    moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
+    newPosition(matrix, GAME);
+  }
+
+  if (JSON.stringify(matrix) == JSON.stringify(startMatrix)) console.log('win');
+  console.log(matrix);
+  console.log(startMatrix);
+});
 
 //---------------------------------------------создание одного элемента
 
@@ -110,7 +104,9 @@ function createHeader() {
   return HEADER;
 }
 
-{/* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */}
+{
+  /* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
+}
 
 function createFooter() {
   let FOOTER = document.createElement("footer");
@@ -161,23 +157,37 @@ function createBody(matrix) {
   document.getElementById("16id").style.display = "none";
 }
 
-
 //------------------------новая игра---------------------------
-function newGame(matrixNew, GAME) {
-    
-    GAME.firstChild.remove();
-    GAME.append(createItems(matrixNew));
-    document.getElementById("16id").style.display = "none";
-
-    
+function newPosition(matr, GAME) {
+  GAME.firstChild.remove();
+  GAME.append(createItems(matr));
+  document.getElementById("16id").style.display = "none";
 }
 
-//------------------------игра---------------------------
+//------------------------ИГРА---------------------------
 
-function getCoordinates(number, mat) {
-    for (let y=0; y < mat.length; y++) {
-        for (let x=0; y< mat[y].length; x++) {
-            if (mat[y][x] == number) return {x, y};
-        }
-    } return null;
-};
+function getPosition(number, mat) {
+  //получение координат
+  for (let y = 0; y < mat.length; y++) {
+    for (let x = 0; x < mat[y].length; x++) {
+      if (mat[y][x] == number) return { x, y };
+    }
+  }
+}
+
+function isAbleToMove(pos1, pos2) {
+  //проверка есть ли ход
+  let differenceX = Math.abs(pos1.x - pos2.x);
+  let differenceY = Math.abs(pos1.y - pos2.y);
+
+  return (
+    (differenceX == 1 || differenceY == 1) &&
+    (pos1.x == pos2.x || pos1.y == pos2.y)
+  );
+}
+
+function moveBTN(pos1, pos2, matr) {
+  const itemPos = matr[pos1.y][pos1.x];
+  matr[pos1.y][pos1.x] = matr[pos2.y][pos2.x];
+  matr[pos2.y][pos2.x] = itemPos;
+}
