@@ -1,5 +1,6 @@
 import { shuffle } from "./shuffle";
 import { getMatrix } from "./getMatrix";
+import { getArray } from "./getArray";
 
 //------------------------КОНСТАНТЫ---------------------------
 
@@ -10,11 +11,13 @@ const SOUND = new Audio(
 
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
-let arrStart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+// let arrStart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+let chosenLevel = 4;
+let arrStart = getArray(chosenLevel);
 let shuffledArray = shuffle(arrStart);
-let matrix = getMatrix(shuffledArray);
-let startMatrix = getMatrix(arrStart);
-console.log(startMatrix);
+let matrix = getMatrix(shuffledArray, chosenLevel);
+let startMatrix = getMatrix(arrStart, chosenLevel);
+// console.log(startMatrix);
 
 //------------------------СЛУШАТЕЛИ---------------------------
 
@@ -25,58 +28,81 @@ const NEW_GAME = document.getElementById("new-game");
 const GAME = document.getElementById("game");
 
 const SOUND_BTN = document.getElementById("flexSwitchCheckReverse");
+const COUNTER = document.getElementById("moves");
+
+const CHOSEN_LEVEL = document.getElementById('footer-nav');
+const LEVEL_4 = document.getElementById('level-4');
+const BTNS_LEVEL_ALL = [...document.getElementsByClassName('btn-option')];
+
+LEVEL_4.classList.add('active');
+
+//-----выбор уровня
+CHOSEN_LEVEL.addEventListener('click', (e) => {
+  const chosenButton = e.target.closest('button');
+  chosenLevel = +chosenButton.value;
+
+  BTNS_LEVEL_ALL.forEach(el => el.classList.remove('active'));
+  chosenButton.classList.add('active');
+ 
+  arrStart = getArray(chosenLevel);
+  console.log('start', arrStart);
+  console.log('level', chosenLevel);
+  
+  shuffledArray = shuffle(arrStart);
+  console.log('shussarray',shuffledArray);
+  matrix = getMatrix(shuffledArray, chosenLevel);
+  newPosition(matrix, GAME);
+  COUNTER.value = "0";
+
+  console.log('level', chosenLevel);
+  
+  console.log('start', arrStart);
+
+})
+
+let hour = document.getElementById("hours");
+let minute = document.getElementById("minutes");
 
 SOUND_BTN.checked = true;
 
-// document.addEventListener("click", () => {
-//   timer();
-// });
-timer();
-
-// let matrixNew;
+GAME.addEventListener(
+  "click",
+  () => {
+    timer();
+  },
+  { once: true }
+);
 
 //-----клик по кнопке НОВАЯ ИГРА
 NEW_GAME.addEventListener("click", () => {
   shuffledArray = shuffle(arrStart);
-  matrix = getMatrix(shuffledArray);
+  matrix = getMatrix(shuffledArray, chosenLevel);
   newPosition(matrix, GAME);
-  // stopTimer();
-  // startTimer();
-
-  // timer();
+  COUNTER.value = "0";
 });
-
-
 
 //-----клик по кнопке c цифрой в ИГРЕ
 
 GAME.addEventListener("click", (e) => {
-  
   const CURR_BTN = e.target.closest(".square");
   const BTN_NUM = +CURR_BTN.id.slice(0, -2);
   const BTN_COORD = getPosition(BTN_NUM, matrix);
-  const EMPTY_BTN_COORD = getPosition(16, matrix);
+  const EMPTY_BTN_COORD = getPosition(arrStart.length, matrix);
   const ableMove = isAbleToMove(BTN_COORD, EMPTY_BTN_COORD);
 
-  
 
-  if (ableMove) {
-    moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
-    newPosition(matrix, GAME);
-    if (SOUND_BTN.checked == true) {
-      SOUND.play();
-    }
+    if (ableMove) {
+      moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
+      newPosition(matrix, GAME);
+      COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
   }
 
-  const COUNTER = document.getElementById('moves');
-  COUNTER.value = parseInt(COUNTER.value) + 1;
+  if (SOUND_BTN.checked == true) { //отключение звука
+        SOUND.play();
+      }
 
-
-
-  if (JSON.stringify(matrix) == JSON.stringify(startMatrix))
-    alert("you're winner!"); //победил?
-  // console.log(matrix);
-  // console.log(startMatrix);
+  if (JSON.stringify(matrix) == JSON.stringify(startMatrix)) //проверка на выйгрыш
+    alert("you're winner!"); 
 });
 
 //---------------------------------------------создание одного элемента
@@ -95,7 +121,11 @@ function createItem(i, x, y) {
       `;
   ITEM.appendChild(ITEM_NUMBER);
 
-  ITEM.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
+  ITEM.style.transform = `translate3d(${x * 100}%, ${y * 100}%, 0)`;
+
+  let w = 100/chosenLevel;
+  ITEM.style.width = `${w}%`;
+  ITEM.style.height = `${w}%`;
 
   return ITEM;
 }
@@ -134,24 +164,20 @@ function createHeader() {
 }
 
 /* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
-// <div class="form-check form-switch">
-//              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-//              <label class="form-check-label" for="flexSwitchCheckChecked">Sound</label>
-//             </div>
 
 function createFooter() {
   let FOOTER = document.createElement("footer");
   FOOTER.classList.add("footer");
   FOOTER.classList.add("container-fluid");
   FOOTER.innerHTML = `
-        <nav class="nav">
+        <nav class="nav" id="footer-nav">
               <p class="description">choose another size</p>
-              <button class="btn-option btn btn-outline-secondary">3x3</button>
-              <button class="btn-option btn btn-outline-success">4x4</button>
-              <button class="btn-option btn btn-outline-secondary">5x5</button>
-              <button class="btn-option btn btn-outline-success">6x6</button>
-              <button class="btn-option btn btn-outline-secondary">7x7</button>
-              <button class="btn-option btn btn-outline-success">8x8</button>
+              <button class="btn-option btn btn-outline-secondary" id="level-3" value="3">3x3</button>
+              <button class="btn-option btn btn-outline-success" id="level-4" value="4">4x4</button>
+              <button class="btn-option btn btn-outline-secondary"  id="level-5" value="5">5x5</button>
+              <button class="btn-option btn btn-outline-success" id="level-6" value="6">6x6</button>
+              <button class="btn-option btn btn-outline-secondary"  id="level-7" value="7">7x7</button>
+              <button class="btn-option btn btn-outline-success" id="level-8" value="8">8x8</button>
             </nav>
         `;
   return FOOTER;
@@ -207,14 +233,14 @@ function createBody(matrix) {
   mainContainer.append(createFooter());
 
   document.querySelector("#game").append(createItems(matrix));
-  document.getElementById("16id").style.display = "none";
+  document.getElementById(`${arrStart.length}id`).style.display = "none";
 }
 
 //------------------------новая игра---------------------------
 function newPosition(matr, GAME) {
   GAME.firstChild.remove();
   GAME.append(createItems(matr));
-  document.getElementById("16id").style.display = "none";
+  document.getElementById(`${arrStart.length}id`).style.display = "none";
 }
 
 //------------------------ИГРА---------------------------
@@ -244,14 +270,12 @@ function moveBTN(pos1, pos2, matr) {
   const itemPos = matr[pos1.y][pos1.x];
   matr[pos1.y][pos1.x] = matr[pos2.y][pos2.x];
   matr[pos2.y][pos2.x] = itemPos;
+  
 }
 
 //---------------ТАЙМЕР--------------
 function timer() {
-  let hour = document.getElementById("hours");
-  let minute = document.getElementById("minutes");
-
-  minute.value = parseInt(minute.value) + 1;
+   minute.value = parseInt(minute.value) + 1;
 
   if (minute.value > 59) {
     hour.value = parseInt(hour.value) + 1;
@@ -267,16 +291,3 @@ function timer() {
     hour.value = "00";
   });
 }
-
-// function startTimer() {
-//   window.TimerId = window.setInterval(timer, 1000);
-// }
-
-// function stopTimer() {
-//   window.clearInterval(window.TimerId);
-
-// }
-
-
-
-

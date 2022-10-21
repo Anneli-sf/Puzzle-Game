@@ -1,10 +1,14 @@
-export function getMatrix(arr) {
-  let matrix = [[], [], [], []];
+export function getMatrix(arr, n) {
+  let matrix = [];
+  for (let i = 0; i < n; i++) {
+    matrix.push([]);
+  }
+
   let x = 0;
   let y = 0;
 
   for (let i = 0; i < arr.length; i++) {
-    if (x >= 4) {
+    if (x >= n) {
       y++;
       x = 0;
     }
@@ -14,5 +18,3 @@ export function getMatrix(arr) {
 
   return matrix;
 }
-
-

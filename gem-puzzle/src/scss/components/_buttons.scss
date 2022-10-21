@@ -1,100 +1,172 @@
 .number {
   display: inline-block;
-  max-width: 5em;
-  max-height: 5em;
+  // max-width: 5em;
+  // max-height: 5em;
+  max-width: 85%;
+  max-height: 85%;
   width: 100%;
   height: 100%;
 
   vertical-align: middle;
   text-decoration: none;
-  border: 0.5em solid rgba(0, 0, 0, 0);
+  border: 0.4em solid rgba(0, 0, 0, 0);
   border-radius: 100%;
-  background: rgb(245, 245, 245) linear-gradient(rgb(245, 245, 245), rgb(188, 192, 193)) 50% 50%/5em 5em;
-  box-shadow: inset 0 -3px 10px rgb(255 255 255), inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+  background: rgb(245, 245, 245)
+    linear-gradient(rgb(245, 245, 245), rgb(188, 192, 193)) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px rgb(255 255 255),
+    inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
 
   span {
-    font-size: 2.5em;
+    // font-size: 2.5em;
+    font-size: 0.9em;
     color: $colorWhite;
   }
 }
 
-.btn1 {
-  background: #f44336 linear-gradient(#f44336, #641711) 50% 50%/5em 5em;
+.btn1,
+.btn17,
+.btn34,
+.btn51
+ {
+  background: #f44336 linear-gradient(#f44336, #641711) 50% 50%/5em 200%;
   box-shadow: inset 0 -3px 10px #f44336, inset 0 3px 10px rgb(0 0 0 / 40%),
     0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn2 {
-  background: #e91e63 linear-gradient(#e91e63, #640e2b) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #e91e63, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn2,
+.btn18,
+.btn35,
+.btn52 {
+  background: #e91e63 linear-gradient(#e91e63, #640e2b) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #e91e63, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn3 {
-  background: #9c27b0 linear-gradient(#9c27b0, #4c0958) 50% 50%/5em 5em;
+.btn3,
+.btn19,
+.btn36,
+.btn53 {
+  background: #9c27b0 linear-gradient(#9c27b0, #4c0958) 50% 50%/5em 200%;
   box-shadow: inset 0 -3px 10px #9c27b0, inset 0 3px 10px rgb(0 0 0 / 40%),
     0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn4 {
-  background: #673ab7 linear-gradient(#673ab7, #230950) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #673ab7, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn4,
+.btn20,
+.btn37,
+.btn54 {
+  background: #673ab7 linear-gradient(#673ab7, #230950) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #673ab7, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn5 {
-  background: #3f51b5 linear-gradient(#3f51b5, #101c5e) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #3f51b5, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn5,
+.btn21,
+.btn38,
+.btn55 {
+  background: #3f51b5 linear-gradient(#3f51b5, #101c5e) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #3f51b5, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn6 {
-  background: #2196f3 linear-gradient(#2196f3, #0a304e) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #2196f3, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn6,
+.btn22,
+.btn39,
+.btn56 {
+  background: #2196f3 linear-gradient(#2196f3, #0a304e) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #2196f3, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn7 {
-  background: #03a9f4 linear-gradient(#03a9f4, #0e4963) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #03a9f4, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn7,
+.btn23,
+.btn40,
+.btn57 {
+  background: #03a9f4 linear-gradient(#03a9f4, #0e4963) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #03a9f4, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn8 {
-  background: #00bcd4 linear-gradient(#00bcd4, #0c4951) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #00bcd4, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn8,
+.btn24,
+.btn41,
+.btn58 {
+  background: #00bcd4 linear-gradient(#00bcd4, #0c4951) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #00bcd4, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-
-
-.btn9 {
-  background: #009688 linear-gradient(#009688, #07433d) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #009688, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn9,
+.btn25,
+.btn42,
+.btn59 {
+  background: #009688 linear-gradient(#009688, #07433d) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #009688, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn10 {
-  background: #4caf50 linear-gradient(#4caf50, #0e5c11) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #4caf50, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn10,
+.btn26,
+.btn43,
+.btn60 {
+  background: #4caf50 linear-gradient(#4caf50, #0e5c11) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #4caf50, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn11 {
-  background: #8bc34a linear-gradient(#8bc34a, #3e660f) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #8bc34a, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn11,
+.btn27,
+.btn44,
+.btn61 {
+  background: #8bc34a linear-gradient(#8bc34a, #3e660f) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #8bc34a, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn12 {
-  background: #cddc39 linear-gradient(#cddc39, #687112) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #cddc39, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn12,
+.btn28,
+.btn45,
+.btn62 {
+  background: #cddc39 linear-gradient(#cddc39, #687112) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #cddc39, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn13 {
-  background: #ffeb3b linear-gradient(#ffeb3b, #7c7212) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #ffeb3b, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn13,
+.btn29,
+.btn46,
+.btn63 {
+  background: #ffeb3b linear-gradient(#ffeb3b, #7c7212) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #ffeb3b, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn14 {
-  background: #ffc107 linear-gradient(#ffc107, #866b18) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #ffc107, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn14,
+.btn30,
+.btn47,
+.btn64 {
+  background: #ffc107 linear-gradient(#ffc107, #866b18) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #ffc107, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
-.btn15 {
-  background: #ff9800 linear-gradient(#ff9800, #805e2d) 50% 50%/5em 5em;
-    box-shadow: inset 0 -3px 10px #ff9800, inset 0 3px 10px rgb(0 0 0 / 40%), 0 2px 4px rgb(0 0 0 / 90%);
+.btn15,
+.btn31,
+.btn48 {
+  background: #ff9800 linear-gradient(#ff9800, #805e2d) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #ff9800, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
+}
+
+.btn16,
+.btn32,
+.btn49,
+.btn50,
+.btn33
+ {
+  background: #f44336 linear-gradient(#f44336, #641711) 50% 50%/5em 200%;
+  box-shadow: inset 0 -3px 10px #f44336, inset 0 3px 10px rgb(0 0 0 / 40%),
+    0 2px 4px rgb(0 0 0 / 90%);
 }
 
 
@@ -131,7 +203,14 @@
   }
 }
 
+.btn-outline-success.active {
+  color: #fff;
+  background-color: #198754;
+  border-color: #198754;
+}
 
-
-
-
+.btn-outline-secondary.active {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
