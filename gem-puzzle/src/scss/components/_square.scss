@@ -13,11 +13,10 @@
   align-items: center;
   text-align: center;
   vertical-align: middle;
-  transform: skew(0);
- 
  
   cursor: pointer;
-  @include transition();
+//  transition: transform 0.4s;
+ @include transition();
   border: none;
   background: #dce2e4;
   border-radius: 5px;
@@ -52,11 +51,6 @@
     background: #c6cbcd;
     transform: skew(-0.06turn, 18deg);
   }
-
-  &:active {
-    transform: scale(1.5);
-  }
-
   
 }
 

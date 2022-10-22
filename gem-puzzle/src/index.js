@@ -1,5 +1,5 @@
 import './scss/style.scss';
-// import './js/bootstrap.bundle.min';
+import './js/bootstrap.bundle';
 import './js/main-page';
 
 // import './js/shuffle';

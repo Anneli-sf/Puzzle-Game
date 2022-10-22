@@ -6,6 +6,7 @@
   max-height: 85%;
   width: 100%;
   height: 100%;
+  transition: transform 0.4s;
 
   vertical-align: middle;
   text-decoration: none;
@@ -213,4 +214,9 @@
   color: #fff;
   background-color: #6c757d;
   border-color: #6c757d;
+}
+
+//--------modal
+.btn-primary {
+  display: none;
 }

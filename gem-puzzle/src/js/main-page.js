@@ -12,17 +12,19 @@ const SOUND = new Audio(
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
 // let arrStart = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-let chosenLevel = 4;
+const levels = [3, 4, 5, 6, 7, 8];
+let chosenLevel = levels[1];
 let arrStart = getArray(chosenLevel);
 let shuffledArray = shuffle(arrStart);
 let matrix = getMatrix(shuffledArray, chosenLevel);
 let startMatrix = getMatrix(arrStart, chosenLevel);
-// console.log(startMatrix);
 
-//------------------------СЛУШАТЕЛИ---------------------------
+// let matrix = getMatrix(arrStart, chosenLevel);
 
 //------------------------загрузка страницы---------------------------
-createBody(matrix);
+// createBody(arrStart);
+createBody(shuffledArray);
+setPosition(matrix, arrStart);
 
 const NEW_GAME = document.getElementById("new-game");
 const GAME = document.getElementById("game");
@@ -30,35 +32,52 @@ const GAME = document.getElementById("game");
 const SOUND_BTN = document.getElementById("flexSwitchCheckReverse");
 const COUNTER = document.getElementById("moves");
 
-const CHOSEN_LEVEL = document.getElementById('footer-nav');
-const LEVEL_4 = document.getElementById('level-4');
-const BTNS_LEVEL_ALL = [...document.getElementsByClassName('btn-option')];
+const CHOSEN_LEVEL = document.getElementById("footer-nav");
+const LEVEL_4 = document.getElementById("level-4");
+const BTNS_LEVEL_ALL = [...document.getElementsByClassName("btn-option")];
+const MODAL_WIN = document.getElementById("exampleModal");
 
-LEVEL_4.classList.add('active');
+let EMPTY_BTN_NUM = arrStart.length;
 
-//-----выбор уровня
-CHOSEN_LEVEL.addEventListener('click', (e) => {
-  const chosenButton = e.target.closest('button');
+LEVEL_4.classList.add("active");
+
+//----------------выбор уровня
+CHOSEN_LEVEL.addEventListener("click", (e) => {
+  const chosenButton = e.target.closest("button");
   chosenLevel = +chosenButton.value;
+  console.log("chosenLevel", chosenLevel);
 
-  BTNS_LEVEL_ALL.forEach(el => el.classList.remove('active'));
-  chosenButton.classList.add('active');
- 
+  BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
+  chosenButton.classList.add("active");
+
   arrStart = getArray(chosenLevel);
-  console.log('start', arrStart);
-  console.log('level', chosenLevel);
-  
+  EMPTY_BTN_NUM = arrStart.length;
+  console.log("arrStart", arrStart);
   shuffledArray = shuffle(arrStart);
-  console.log('shussarray',shuffledArray);
+  console.log("shuffledArray", shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
-  newPosition(matrix, GAME);
+  console.log("matrix", matrix);
+  startMatrix = getMatrix(arrStart, chosenLevel);
+
+  GAME.firstChild.remove();
+  GAME.append(createGameWrapper(shuffledArray));
+  setPosition(matrix, arrStart);
   COUNTER.value = "0";
 
-  console.log('level', chosenLevel);
-  
-  console.log('start', arrStart);
+  document.getElementById(`${shuffledArray.length}id`).style.display = "none";
 
-})
+  GAME.addEventListener("click", () => {
+    isWin(matrix, startMatrix);
+  });
+
+  GAME.addEventListener(
+    "click",
+    () => {
+      startTimer();
+    },
+    { once: true }
+  );
+});
 
 let hour = document.getElementById("hours");
 let minute = document.getElementById("minutes");
@@ -68,7 +87,7 @@ SOUND_BTN.checked = true;
 GAME.addEventListener(
   "click",
   () => {
-    timer();
+    startTimer();
   },
   { once: true }
 );
@@ -77,37 +96,78 @@ GAME.addEventListener(
 NEW_GAME.addEventListener("click", () => {
   shuffledArray = shuffle(arrStart);
   matrix = getMatrix(shuffledArray, chosenLevel);
-  newPosition(matrix, GAME);
+  setPosition(matrix, arrStart);
   COUNTER.value = "0";
+
+  GAME.addEventListener(
+    "click",
+    () => {
+      startTimer();
+    },
+    { once: true }
+  );
 });
 
 //-----клик по кнопке c цифрой в ИГРЕ
-
 GAME.addEventListener("click", (e) => {
   const CURR_BTN = e.target.closest(".square");
   const BTN_NUM = +CURR_BTN.id.slice(0, -2);
   const BTN_COORD = getPosition(BTN_NUM, matrix);
-  const EMPTY_BTN_COORD = getPosition(arrStart.length, matrix);
+  const EMPTY_BTN_COORD = getPosition(EMPTY_BTN_NUM, matrix);
   const ableMove = isAbleToMove(BTN_COORD, EMPTY_BTN_COORD);
 
-
-    if (ableMove) {
-      moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
-      newPosition(matrix, GAME);
-      COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
+  if (ableMove) {
+    moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
+    setPosition(matrix, arrStart);
+    COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
   }
 
-  if (SOUND_BTN.checked == true) { //отключение звука
-        SOUND.play();
-      }
+  if (SOUND_BTN.checked == true) {
+    //отключение звука
+    SOUND.play();
+  }
 
-  if (JSON.stringify(matrix) == JSON.stringify(startMatrix)) //проверка на выйгрыш
-    alert("you're winner!"); 
+  isWin(matrix, startMatrix);
 });
 
-//---------------------------------------------создание одного элемента
+//---------------------------------------------создание всего боди
+function createBody(arr) {
+  let mainContainer = document.createElement("div");
+  mainContainer.classList.add("page-container");
+  BODY.appendChild(mainContainer);
+  // BODY.append(createWinModal());
+  mainContainer.append(createMainSection(arr));
+  mainContainer.prepend(createHeader());
+  mainContainer.append(createFooter());
 
-function createItem(i, x, y) {
+  document.getElementById(`${arr.length}id`).style.display = "none";
+}
+
+function setPosition(mat, arr) {
+  //задание позиции
+
+  for (let y = 0; y < mat.length; y++) {
+    for (let x = 0; x < mat[y].length; x++) {
+      let value = mat[y][x];
+      let index = arr[value - 1];
+      styleItem(
+        document.getElementById("game-wrapper").children[index - 1],
+        x,
+        y
+      );
+    }
+  }
+
+  // document.getElementById(`${arr.length}id`).style.display = "none";
+}
+
+function styleItem(item, x, y) {
+  //задание позиции
+  item.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
+}
+
+function createItem(i) {
+  //-----------------------------создание одного элемента
   const ITEM = document.createElement("div");
   ITEM.classList.add("square");
   ITEM.id = `${i}id`;
@@ -121,71 +181,31 @@ function createItem(i, x, y) {
       `;
   ITEM.appendChild(ITEM_NUMBER);
 
-  ITEM.style.transform = `translate3d(${x * 100}%, ${y * 100}%, 0)`;
+  // ITEM.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
 
-  let w = 100/chosenLevel;
+  let w = 100 / chosenLevel;
   ITEM.style.width = `${w}%`;
   ITEM.style.height = `${w}%`;
 
   return ITEM;
 }
 
-//---------------------------------------------создание 16 элементов
-
-function createItems(mat) {
+function createGameWrapper(arr) {
+  //----------------------создание 16 элементов
   const GAME_WRAPPER = document.createElement("div");
   GAME_WRAPPER.id = "game-wrapper";
   GAME_WRAPPER.classList.add("game-wrapper");
 
-  for (let y = 0; y < mat.length; y++) {
-    for (let x = 0; x < mat[y].length; x++) {
-      let value = mat[y][x];
-      GAME_WRAPPER.appendChild(createItem(value, x, y));
-    }
+  for (let i = 1; i < arr.length + 1; i++) {
+    let ITEM = createItem(i);
+    setPosition(ITEM);
+    GAME_WRAPPER.append(ITEM);
   }
-
   return GAME_WRAPPER;
 }
 
-//---------------------------------------------создание хедера и футера
-
-function createHeader() {
-  let HEADER = document.createElement("header");
-  HEADER.classList.add("header");
-  HEADER.classList.add("container-fluid");
-  HEADER.innerHTML = `
-        <nav class="nav">
-              <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
-              <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
-              <button type="button" class="btn-nav btn btn-outline-success">Results</button>
-        </nav>
-        `;
-  return HEADER;
-}
-
-/* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
-
-function createFooter() {
-  let FOOTER = document.createElement("footer");
-  FOOTER.classList.add("footer");
-  FOOTER.classList.add("container-fluid");
-  FOOTER.innerHTML = `
-        <nav class="nav" id="footer-nav">
-              <p class="description">choose another size</p>
-              <button class="btn-option btn btn-outline-secondary" id="level-3" value="3">3x3</button>
-              <button class="btn-option btn btn-outline-success" id="level-4" value="4">4x4</button>
-              <button class="btn-option btn btn-outline-secondary"  id="level-5" value="5">5x5</button>
-              <button class="btn-option btn btn-outline-success" id="level-6" value="6">6x6</button>
-              <button class="btn-option btn btn-outline-secondary"  id="level-7" value="7">7x7</button>
-              <button class="btn-option btn btn-outline-success" id="level-8" value="8">8x8</button>
-            </nav>
-        `;
-  return FOOTER;
-}
-
-//---------------------------------------------создание основной части страницы
-
-function createMainSection() {
+function createMainSection(arr) {
+  //------------создание основной части страницы
   const mainSection = document.createElement("main");
   mainSection.classList.add("main");
   mainSection.classList.add("container-fluid");
@@ -216,37 +236,76 @@ function createMainSection() {
   const GAME = document.createElement("div");
   GAME.id = "game";
   GAME.classList.add("game");
+  GAME.append(createGameWrapper(arr));
   mainSection.append(GAME);
 
   return mainSection;
 }
 
-//---------------------------------------------создание всего боди
-
-function createBody(matrix) {
-  let mainContainer = document.createElement("div");
-  mainContainer.classList.add("page-container");
-  BODY.appendChild(mainContainer);
-
-  mainContainer.prepend(createHeader());
-  mainContainer.append(createMainSection());
-  mainContainer.append(createFooter());
-
-  document.querySelector("#game").append(createItems(matrix));
-  document.getElementById(`${arrStart.length}id`).style.display = "none";
+function createHeader() {
+  //---------------------------------------------создание хедера
+  let HEADER = document.createElement("header");
+  HEADER.classList.add("header");
+  HEADER.classList.add("container-fluid");
+  HEADER.innerHTML = `
+        <nav class="nav">
+              <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
+              <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
+              <button type="button" class="btn-nav btn btn-outline-success">Results</button>
+        </nav>
+        `;
+  return HEADER;
+}
+/* <button type="button" class="btn-nav btn btn-outline-danger">Stop</button> */
+function createFooter() {
+  //---------------------------------------------создание футера
+  let FOOTER = document.createElement("footer");
+  FOOTER.classList.add("footer");
+  FOOTER.classList.add("container-fluid");
+  FOOTER.innerHTML = `
+        <nav class="nav" id="footer-nav">
+              <p class="description">choose another size</p>
+              <button class="btn-option btn btn-outline-secondary" id="level-3" value="${levels[0]}">3x3</button>
+              <button class="btn-option btn btn-outline-success" id="level-4" value="${levels[1]}">4x4</button>
+              <button class="btn-option btn btn-outline-secondary"  id="level-5" value="${levels[2]}">5x5</button>
+              <button class="btn-option btn btn-outline-success" id="level-6" value="${levels[3]}">6x6</button>
+              <button class="btn-option btn btn-outline-secondary"  id="level-7" value="${levels[4]}">7x7</button>
+              <button class="btn-option btn btn-outline-success" id="level-8" value="${levels[5]}">8x8</button>
+            </nav>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            </button>
+        `;
+  return FOOTER;
 }
 
-//------------------------новая игра---------------------------
-function newPosition(matr, GAME) {
-  GAME.firstChild.remove();
-  GAME.append(createItems(matr));
-  document.getElementById(`${arrStart.length}id`).style.display = "none";
+//---------создание окна о выйгрыше
+function createWinModal() {
+  const MODAL = document.createElement("div");
+  MODAL.classList.add("modal", "fade");
+  MODAL.id = "exampleModal";
+  MODAL.tabIndex = "-1";
+  MODAL.ariaLabelledby = "exampleModalLabel";
+  MODAL.ariaHidden = "true";
+  MODAL.innerHTML = `
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="exampleModalLabel">You win!</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>"Hooray! You solved the puzzle in ${hour.value} min ${minute.value} sec and  ${COUNTER.value} moves!".</p>
+    </div>
+  </div>
+</div>
+  `;
+  return MODAL;
 }
 
 //------------------------ИГРА---------------------------
 
+//------------------------получение координат
 function getPosition(number, mat) {
-  //получение координат
   for (let y = 0; y < mat.length; y++) {
     for (let x = 0; x < mat[y].length; x++) {
       if (mat[y][x] == number) return { x, y };
@@ -254,9 +313,10 @@ function getPosition(number, mat) {
   }
 }
 
+//----------------------------проверка есть ли ход
 function isAbleToMove(pos1, pos2) {
-  //проверка есть ли ход
   let differenceX = Math.abs(pos1.x - pos2.x);
+  console.log(differenceX);
   let differenceY = Math.abs(pos1.y - pos2.y);
 
   return (
@@ -265,29 +325,52 @@ function isAbleToMove(pos1, pos2) {
   );
 }
 
+//-----------------------------перемещение кнопки
 function moveBTN(pos1, pos2, matr) {
-  //перемещение кнопки
   const itemPos = matr[pos1.y][pos1.x];
   matr[pos1.y][pos1.x] = matr[pos2.y][pos2.x];
   matr[pos2.y][pos2.x] = itemPos;
-  
 }
 
 //---------------ТАЙМЕР--------------
 function timer() {
-   minute.value = parseInt(minute.value) + 1;
+  minute.value = parseInt(minute.value) + 1;
 
   if (minute.value > 59) {
     hour.value = parseInt(hour.value) + 1;
     minute.value = "00";
   }
 
-  if (hour.value < 30) {
-    window.setTimeout(timer, 1000);
-  } else alert("sorry. time is out");
-
   NEW_GAME.addEventListener("click", () => {
-    minute.value = "00";
-    hour.value = "00";
+    stopTimer();
   });
+
+  CHOSEN_LEVEL.addEventListener("click", (e) => {
+    if (e.target.closest("button")) {
+      stopTimer();
+    }
+  });
+}
+
+function startTimer() {
+  window.timerId = window.setInterval(timer, 1000);
+}
+
+function stopTimer() {
+  window.clearInterval(window.timerId);
+  minute.value = "00";
+  hour.value = "00";
+}
+
+//------------------------------проверка на выйгрыш
+function isWin(mat, startMat) {
+  if (JSON.stringify(mat) == JSON.stringify(startMat)) {
+    BODY.append(createWinModal());
+    setTimeout(() => {
+      document.getElementById("exampleModal").classList.add("show");
+      document.querySelector(".btn-close").addEventListener("click", () => {
+        document.getElementById("exampleModal").remove("show");
+      });
+    }, 1000);
+  }
 }
