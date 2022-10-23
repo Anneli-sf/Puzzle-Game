@@ -175,6 +175,7 @@
 //---------------------------------------------------other
 .btn-option {
   font-size: 1.5rem;
+  margin-bottom: 0.5rem;
   @include medium {
     font-size: 1.5rem;
   }
@@ -190,6 +191,7 @@
 
 .btn-nav {
   font-size: 2rem;
+  margin-bottom: 0.5rem;
 
   @include medium {
     font-size: 2rem;

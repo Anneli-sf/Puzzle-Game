@@ -1,7 +1,7 @@
 .header {
   max-height: 17%;
   height: 100%;
-  padding: 1rem 1rem;
+  padding: 1em 1em;
 
   @include flex-row($justify: center);
 
@@ -24,13 +24,8 @@
     gap: 5% 5%;
     @include flex-row($justify: center);
 
-    // @include medium {
-    //   @include flex-row($justify: flex-end);
-    // }
-
     @include extra-small {
       @include flex-column($justify: center);
-      gap: 8% 5%;
     }
   }
 }

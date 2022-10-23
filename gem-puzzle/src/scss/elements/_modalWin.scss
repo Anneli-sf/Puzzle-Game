@@ -1,7 +1,11 @@
-
-
 .modal {
     &.show {
         @include flex-row();
+    }
+}
+
+.modal-table {
+    &.show {
+        padding-top: 30vh;
     }
 }

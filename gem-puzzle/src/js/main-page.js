@@ -35,7 +35,7 @@ const COUNTER = document.getElementById("moves");
 const CHOSEN_LEVEL = document.getElementById("footer-nav");
 const LEVEL_4 = document.getElementById("level-4");
 const BTNS_LEVEL_ALL = [...document.getElementsByClassName("btn-option")];
-const MODAL_WIN = document.getElementById("exampleModal");
+const MODAL_WIN = document.getElementById("modal");
 
 let EMPTY_BTN_NUM = arrStart.length;
 
@@ -135,10 +135,11 @@ function createBody(arr) {
   let mainContainer = document.createElement("div");
   mainContainer.classList.add("page-container");
   BODY.appendChild(mainContainer);
-  // BODY.append(createWinModal());
+  
   mainContainer.append(createMainSection(arr));
   mainContainer.prepend(createHeader());
   mainContainer.append(createFooter());
+  BODY.append(createResultsTable());
 
   document.getElementById(`${arr.length}id`).style.display = "none";
 }
@@ -251,7 +252,7 @@ function createHeader() {
         <nav class="nav">
               <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
               <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
-              <button type="button" class="btn-nav btn btn-outline-success">Results</button>
+              <button type="button" class="btn-nav btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#resultsModul">Results</button>
         </nav>
         `;
   return HEADER;
@@ -272,7 +273,7 @@ function createFooter() {
               <button class="btn-option btn btn-outline-secondary"  id="level-7" value="${levels[4]}">7x7</button>
               <button class="btn-option btn btn-outline-success" id="level-8" value="${levels[5]}">8x8</button>
             </nav>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">
             </button>
         `;
   return FOOTER;
@@ -282,15 +283,15 @@ function createFooter() {
 function createWinModal() {
   const MODAL = document.createElement("div");
   MODAL.classList.add("modal", "fade");
-  MODAL.id = "exampleModal";
+  MODAL.id = "modal";
   MODAL.tabIndex = "-1";
-  MODAL.ariaLabelledby = "exampleModalLabel";
+  MODAL.ariaLabelledby = "modalLabel";
   MODAL.ariaHidden = "true";
   MODAL.innerHTML = `
   <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
-      <h1 class="modal-title fs-5" id="exampleModalLabel">You win!</h1>
+      <h1 class="modal-title fs-5" id="modalLabel">You win!</h1>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
@@ -300,6 +301,32 @@ function createWinModal() {
 </div>
   `;
   return MODAL;
+}
+
+//---------создание таблицы результатов
+// data-bs-backdrop="static"
+function createResultsTable() {
+  const RESULTS = document.createElement("div");
+  RESULTS.classList.add("modal", "fade", "modal-table");
+  RESULTS.id = "resultsModul";
+  RESULTS.tabIndex = "-1";
+  RESULTS.ariaLabelledby = "resultsModulLabel";
+  RESULTS.ariaHidden = "true";
+  RESULTS.innerHTML = `
+ 
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="resultsModulLabel">Best Results</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+    </div>
+  </div>
+  `;
+  return RESULTS;
 }
 
 //------------------------ИГРА---------------------------
@@ -316,7 +343,6 @@ function getPosition(number, mat) {
 //----------------------------проверка есть ли ход
 function isAbleToMove(pos1, pos2) {
   let differenceX = Math.abs(pos1.x - pos2.x);
-  console.log(differenceX);
   let differenceY = Math.abs(pos1.y - pos2.y);
 
   return (
@@ -341,6 +367,20 @@ function timer() {
     minute.value = "00";
   }
 
+  // NEW_GAME.addEventListener("click", () => {
+  //   stopTimer();
+  // });
+
+  // CHOSEN_LEVEL.addEventListener("click", (e) => {
+  //   if (e.target.closest("button")) {
+  //     stopTimer();
+  //   }
+  // });
+}
+
+function startTimer() {
+  window.timerId = window.setInterval(timer, 1000);
+
   NEW_GAME.addEventListener("click", () => {
     stopTimer();
   });
@@ -350,10 +390,6 @@ function timer() {
       stopTimer();
     }
   });
-}
-
-function startTimer() {
-  window.timerId = window.setInterval(timer, 1000);
 }
 
 function stopTimer() {
@@ -367,10 +403,130 @@ function isWin(mat, startMat) {
   if (JSON.stringify(mat) == JSON.stringify(startMat)) {
     BODY.append(createWinModal());
     setTimeout(() => {
-      document.getElementById("exampleModal").classList.add("show");
+      document.getElementById("modal").classList.add("show");
       document.querySelector(".btn-close").addEventListener("click", () => {
-        document.getElementById("exampleModal").remove("show");
+        document.getElementById("modal").remove("show");
       });
     }, 1000);
   }
 }
+
+
+//----------TABLE-->
+//                 <section class="results">
+//                     <div class="results-table"></div>
+//                 </section>
+
+//                 /*TABLE*/
+// .results {
+//   display: none;
+  
+//   padding: 15px;
+//   width: 200px;
+//   height: 370px;
+//   background-color: #ffffff;
+//   opacity: 95%;
+  
+//   border-radius: 15px;
+//   border-color: #ffdd00;
+//   border-style: solid;
+//   border-width: 5px;
+  
+//   z-index: 5;
+// }
+
+// .results.show {
+//   display: block;
+//   transition: all 0.5s ease;
+// }
+
+// .results-table {
+//   width: 150px; 
+//   margin: 0 auto;
+//   border-collapse: collapse;
+// }
+
+
+// .results-table-cell {
+//   padding: 2px 20px;
+//   border-color:#272626;
+//   border-width: 0.3px;
+//   border-style: solid;
+ 
+//   min-width: 30px;
+//   min-height: 20px;
+
+// }
+
+// таблица счета
+// function showTableResults() {
+//   resultsArea.classList.add('show');
+
+//   scoreList = JSON.parse(window.localStorage.getItem('scoreList'));
+//   if (!scoreList) {
+//       scoreList = [];
+//   }
+ 
+//   let scoreUser = score;
+//   scoreItem[0] = scoreUser;
+//   scoreList.push(scoreItem);
+
+//   if (scoreList.length > 1 && scoreList.length < 11) {
+//       scoreList.sort(function(a, b) {
+//           return a - b;
+//       })
+//   }
+
+//   if (scoreList.length == 11) {
+      
+//       scoreList = scoreList.slice(-10);
+//       scoreList.sort(function(a,b) {
+//           return a - b;
+//       });
+//   }
+
+//   window.localStorage.setItem('scoreList', JSON.stringify(scoreList));
+
+  //отрисовка таблицы
+
+//   resultsArea.classList.add('show');
+
+//   const ratingTable = document.createElement('table');
+//   const headRow = document.createElement('tr');
+//   ratingTable.appendChild(headRow);
+//   ratingTable.classList.add('results-table');
+
+//   //шапка
+//   for (let i=0; i<2; i++) {
+//       const headCell = document.createElement('th');
+//       headCell.classList.add('results-table-cell');
+      
+//       if (i == 0) headCell.textContent = 'Pos.'; 
+//       if (i == 1) headCell.textContent = 'Score';
+//       headCell.style.fontSize = '18px'; 
+//       headRow.appendChild(headCell);
+//   }
+
+//   //основа
+//   for (let i=0; i < 10; i++) {
+//       const tableRow = document.createElement('tr');
+//       ratingTable.appendChild(tableRow);
+
+//       for (let j=0; j<2; j++) {
+//       const tableCell = document.createElement('td');
+//       if (j == 0) tableCell.innerHTML = `${i+1}`; //номер позиции
+//       if (scoreList[i]) {
+//           if (j == 1) tableCell.innerHTML = `${scoreList[i][0]}`;
+//       }
+
+//       tableCell.style.fontSize = '18px';
+//       tableCell.classList.add('results-table-cell');
+//       tableRow.appendChild(tableCell);
+//       }
+
+//   }
+
+//   resultsArea.appendChild(ratingTable);
+// }
+
+
