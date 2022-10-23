@@ -1,6 +1,7 @@
 import { shuffle } from "./shuffle";
 import { getMatrix } from "./getMatrix";
 import { getArray } from "./getArray";
+import {sortResults} from "./sortResults";
 
 //------------------------КОНСТАНТЫ---------------------------
 
@@ -19,6 +20,17 @@ let shuffledArray = shuffle(arrStart);
 let matrix = getMatrix(shuffledArray, chosenLevel);
 let startMatrix = getMatrix(arrStart, chosenLevel);
 
+// let results = {
+//   level: [],
+//   min: [],
+//   sec: [],
+//   moves: [],
+// };
+
+let results = [
+
+];
+
 // let matrix = getMatrix(arrStart, chosenLevel);
 
 //------------------------загрузка страницы---------------------------
@@ -36,12 +48,14 @@ const CHOSEN_LEVEL = document.getElementById("footer-nav");
 const LEVEL_4 = document.getElementById("level-4");
 const BTNS_LEVEL_ALL = [...document.getElementsByClassName("btn-option")];
 const MODAL_WIN = document.getElementById("modal");
+const RESULTS_BTN = document.getElementById("btn-results");
 
 let EMPTY_BTN_NUM = arrStart.length;
 
+
 LEVEL_4.classList.add("active");
 
-//----------------выбор уровня
+//----------------------------------------------выбор уровня
 CHOSEN_LEVEL.addEventListener("click", (e) => {
   const chosenButton = e.target.closest("button");
   chosenLevel = +chosenButton.value;
@@ -66,9 +80,9 @@ CHOSEN_LEVEL.addEventListener("click", (e) => {
 
   document.getElementById(`${shuffledArray.length}id`).style.display = "none";
 
-  GAME.addEventListener("click", () => {
-    isWin(matrix, startMatrix);
-  });
+  // GAME.addEventListener("click", () => {
+  //   isWin(matrix, startMatrix);
+  // });
 
   GAME.addEventListener(
     "click",
@@ -79,8 +93,8 @@ CHOSEN_LEVEL.addEventListener("click", (e) => {
   );
 });
 
-let hour = document.getElementById("hours");
-let minute = document.getElementById("minutes");
+let min = document.getElementById("mins");
+let sec = document.getElementById("secs");
 
 SOUND_BTN.checked = true;
 
@@ -109,37 +123,52 @@ NEW_GAME.addEventListener("click", () => {
 });
 
 //-----клик по кнопке c цифрой в ИГРЕ
-GAME.addEventListener("click", (e) => {
-  const CURR_BTN = e.target.closest(".square");
-  const BTN_NUM = +CURR_BTN.id.slice(0, -2);
-  const BTN_COORD = getPosition(BTN_NUM, matrix);
-  const EMPTY_BTN_COORD = getPosition(EMPTY_BTN_NUM, matrix);
-  const ableMove = isAbleToMove(BTN_COORD, EMPTY_BTN_COORD);
+GAME.addEventListener("click", (e) => {toGame(e)});
 
-  if (ableMove) {
-    moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
-    setPosition(matrix, arrStart);
-    COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
-  }
-
-  if (SOUND_BTN.checked == true) {
-    //отключение звука
-    SOUND.play();
-  }
-
-  isWin(matrix, startMatrix);
-});
+function toGame(e) {
+   
+    const CURR_BTN = e.target.closest(".square");
+    const BTN_NUM = +CURR_BTN.id.slice(0, -2);
+    const BTN_COORD = getPosition(BTN_NUM, matrix);
+    const EMPTY_BTN_COORD = getPosition(EMPTY_BTN_NUM, matrix);
+    const ableMove = isAbleToMove(BTN_COORD, EMPTY_BTN_COORD);
+  
+    if (ableMove) {
+      moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
+      setPosition(matrix, arrStart);
+      COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
+    }
+  
+    if (SOUND_BTN.checked == true) {
+      //отключение звука
+      SOUND.play();
+    }
+  
+    isWin(matrix, startMatrix);
+  
+    NEW_GAME.addEventListener("click", () => {
+      stopTimer();
+    });
+  
+    CHOSEN_LEVEL.addEventListener("click", (e) => {
+      if (e.target.closest("button")) {
+        stopTimer();
+      }
+    });
+  };
 
 //---------------------------------------------создание всего боди
 function createBody(arr) {
   let mainContainer = document.createElement("div");
   mainContainer.classList.add("page-container");
   BODY.appendChild(mainContainer);
-  
+
   mainContainer.append(createMainSection(arr));
   mainContainer.prepend(createHeader());
   mainContainer.append(createFooter());
   BODY.append(createResultsTable());
+  // createTableRows();
+  // console.log(createTableRows());
 
   document.getElementById(`${arr.length}id`).style.display = "none";
 }
@@ -220,11 +249,11 @@ function createMainSection(arr) {
 
       <div class="timer">
           <p class="timer-title">Time</p>
-          <input class="time" type="text" value="00" id="hours">
+          <input class="time" type="text" value="00" id="mins">
           <span>min</span>
           <p>:</p>
           <span>sec</span>
-          <input class="time" type="text" value="00" id="minutes">
+          <input class="time" type="text" value="00" id="secs">
       </div>
 
       <div class="moves">
@@ -252,7 +281,7 @@ function createHeader() {
         <nav class="nav">
               <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
               <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
-              <button type="button" class="btn-nav btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#resultsModul">Results</button>
+              <button type="button" class="btn-nav btn btn-outline-success" id="btn-results" data-bs-toggle="modal" data-bs-target="#resultsModul">Results</button>
         </nav>
         `;
   return HEADER;
@@ -292,10 +321,10 @@ function createWinModal() {
   <div class="modal-content">
     <div class="modal-header">
       <h1 class="modal-title fs-5" id="modalLabel">You win!</h1>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <button type="button" class="btn-close btn-close-win" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-      <p>"Hooray! You solved the puzzle in ${hour.value} min ${minute.value} sec and  ${COUNTER.value} moves!".</p>
+      <p>"Hooray! You solved the puzzle in ${min.value} min ${sec.value} sec and  ${COUNTER.value} moves!".</p>
     </div>
   </div>
 </div>
@@ -303,7 +332,7 @@ function createWinModal() {
   return MODAL;
 }
 
-//---------создание таблицы результатов
+//---------создание модала результатов
 // data-bs-backdrop="static"
 function createResultsTable() {
   const RESULTS = document.createElement("div");
@@ -321,13 +350,79 @@ function createResultsTable() {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
       </div>
       <div class="modal-body">
-        ...
+      <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Level</th>
+          <th scope="col">Moves</th>
+          <th scope="col">Time</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
       </div>
     </div>
   </div>
   `;
   return RESULTS;
 }
+
+//-------------отрисовка таблицы с результатами
+function createTableRows() {
+  for (let i = 0; i < 10; i++) {
+    const TR = document.createElement("tr");
+    
+    // TR.innerHTML = `
+    //     <td>${i + 1}</td>
+    //     <td class="td-level"></td>
+    //     <td class="td-moves"></td>
+    //     <td class="td-time"></td>
+    // `;
+
+    for (let j=0; j<4; j++) {
+      const TD = document.createElement("td");
+      if (j == 0) TD.innerHTML = `${i+1}`; //номер позиции
+      if (results[i]) {
+          if (j == 1) TD.innerHTML = `${results[i].level}x${results[i].level}`;
+          if (j == 2) TD.innerHTML = `${results[i].moves}`;
+          if (j == 3) TD.innerHTML = `${results[i].mins}:${results[i].secs}`;
+      }
+      TR.append(TD);
+    }
+    switch (i) {
+      case 0:
+        TR.classList.add("table-primary");
+        break;
+      case 2:
+        TR.classList.add("table-success");
+        break;
+      case 4:
+        TR.classList.add("table-danger");
+        break;
+      case 6:
+        TR.classList.add("table-warning");
+        break;
+      case 8:
+        TR.classList.add("table-info");
+        break;
+      default:
+        TR.classList.add("table-secondary");
+    }
+    // if (results.moves) {
+    //   document.querySelector('td-moves').innerHTML = `${results.moves[0]}`
+    // }
+    document.querySelector("tbody").append(TR);
+  }
+}
+
+RESULTS_BTN.addEventListener('click', () => {
+  document.querySelector("tbody").innerHTML = ``;
+  sortResults(results);
+  console.log(results);
+  createTableRows();
+});
 
 //------------------------ИГРА---------------------------
 
@@ -360,11 +455,11 @@ function moveBTN(pos1, pos2, matr) {
 
 //---------------ТАЙМЕР--------------
 function timer() {
-  minute.value = parseInt(minute.value) + 1;
+  sec.value = parseInt(sec.value) + 1;
 
-  if (minute.value > 59) {
-    hour.value = parseInt(hour.value) + 1;
-    minute.value = "00";
+  if (sec.value > 59) {
+    min.value = parseInt(min.value) + 1;
+    sec.value = "00";
   }
 
   // NEW_GAME.addEventListener("click", () => {
@@ -394,69 +489,37 @@ function startTimer() {
 
 function stopTimer() {
   window.clearInterval(window.timerId);
-  minute.value = "00";
-  hour.value = "00";
+  sec.value = "00";
+  min.value = "00";
 }
 
 //------------------------------проверка на выйгрыш
 function isWin(mat, startMat) {
-  if (JSON.stringify(mat) == JSON.stringify(startMat)) {
+  if (JSON.stringify(mat) == JSON.stringify(startMat) || COUNTER.value == 3) {
     BODY.append(createWinModal());
     setTimeout(() => {
       document.getElementById("modal").classList.add("show");
-      document.querySelector(".btn-close").addEventListener("click", () => {
-        document.getElementById("modal").remove("show");
+      document.querySelector(".btn-close-win").addEventListener("click", () => {
+      document.getElementById("modal").remove("show");
       });
     }, 1000);
+    // results.min.push(min.value);
+    // results.sec.push(sec.value);
+    // results.moves.push(COUNTER.value);
+    // results.level.push(chosenLevel);
+    results.push({
+      level: chosenLevel,
+      mins: min.value,
+      secs: sec.value,
+      moves: COUNTER.value
+    });
+    
+    // GAME.removeEventListener('click', toGame);
+    console.log(results);
   }
 }
 
 
-//----------TABLE-->
-//                 <section class="results">
-//                     <div class="results-table"></div>
-//                 </section>
-
-//                 /*TABLE*/
-// .results {
-//   display: none;
-  
-//   padding: 15px;
-//   width: 200px;
-//   height: 370px;
-//   background-color: #ffffff;
-//   opacity: 95%;
-  
-//   border-radius: 15px;
-//   border-color: #ffdd00;
-//   border-style: solid;
-//   border-width: 5px;
-  
-//   z-index: 5;
-// }
-
-// .results.show {
-//   display: block;
-//   transition: all 0.5s ease;
-// }
-
-// .results-table {
-//   width: 150px; 
-//   margin: 0 auto;
-//   border-collapse: collapse;
-// }
-
-
-// .results-table-cell {
-//   padding: 2px 20px;
-//   border-color:#272626;
-//   border-width: 0.3px;
-//   border-style: solid;
- 
-//   min-width: 30px;
-//   min-height: 20px;
-
-// }
 
 // таблица счета
 // function showTableResults() {
@@ -466,7 +529,7 @@ function isWin(mat, startMat) {
 //   if (!scoreList) {
 //       scoreList = [];
 //   }
- 
+
 //   let scoreUser = score;
 //   scoreItem[0] = scoreUser;
 //   scoreList.push(scoreItem);
@@ -478,7 +541,7 @@ function isWin(mat, startMat) {
 //   }
 
 //   if (scoreList.length == 11) {
-      
+
 //       scoreList = scoreList.slice(-10);
 //       scoreList.sort(function(a,b) {
 //           return a - b;
@@ -486,47 +549,3 @@ function isWin(mat, startMat) {
 //   }
 
 //   window.localStorage.setItem('scoreList', JSON.stringify(scoreList));
-
-  //отрисовка таблицы
-
-//   resultsArea.classList.add('show');
-
-//   const ratingTable = document.createElement('table');
-//   const headRow = document.createElement('tr');
-//   ratingTable.appendChild(headRow);
-//   ratingTable.classList.add('results-table');
-
-//   //шапка
-//   for (let i=0; i<2; i++) {
-//       const headCell = document.createElement('th');
-//       headCell.classList.add('results-table-cell');
-      
-//       if (i == 0) headCell.textContent = 'Pos.'; 
-//       if (i == 1) headCell.textContent = 'Score';
-//       headCell.style.fontSize = '18px'; 
-//       headRow.appendChild(headCell);
-//   }
-
-//   //основа
-//   for (let i=0; i < 10; i++) {
-//       const tableRow = document.createElement('tr');
-//       ratingTable.appendChild(tableRow);
-
-//       for (let j=0; j<2; j++) {
-//       const tableCell = document.createElement('td');
-//       if (j == 0) tableCell.innerHTML = `${i+1}`; //номер позиции
-//       if (scoreList[i]) {
-//           if (j == 1) tableCell.innerHTML = `${scoreList[i][0]}`;
-//       }
-
-//       tableCell.style.fontSize = '18px';
-//       tableCell.classList.add('results-table-cell');
-//       tableRow.appendChild(tableCell);
-//       }
-
-//   }
-
-//   resultsArea.appendChild(ratingTable);
-// }
-
-
