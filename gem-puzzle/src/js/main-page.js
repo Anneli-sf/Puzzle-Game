@@ -25,8 +25,6 @@ getCurrPositionLocalStorage();
 
 // let matrix = getMatrix(shuffledArray, chosenLevel);
 // let startMatrix;
-
-// console.log(arrStart);
 // let arrStart = getArray(chosenLevel);
 // let shuffledArray = shuffle(arrStart);
 // let matrix = getMatrix(shuffledArray, chosenLevel);
@@ -66,7 +64,7 @@ getSoundLocalStorage();
 getLevelBtnLocalStorage(chosenLevel);
 getMovesLocalStorage();
 getTimeLocalStorage();
-// if (!localStorage.getItem("level")) LEVEL_4.classList.add("active");
+
 
 
   GAME.addEventListener(
@@ -76,9 +74,6 @@ getTimeLocalStorage();
     },
     { once: true }
   );
-
-
-// SOUND_BTN.addEventListener("click", setSoundLocalStorage);
 
 //-----выбор уровня
 CHOSEN_LEVEL.addEventListener("click", (e) => {
@@ -509,34 +504,10 @@ function timer() {
     // stopTimer();
   });
 
-  // setTimeLocalStorage();
-
-  // NEW_GAME.addEventListener("click", () => {
-  //   stopTimer();
-  // });
-
-  // CHOSEN_LEVEL.addEventListener("click", (e) => {
-  //   if (e.target.closest("button")) {
-  //     stopTimer();
-  //   }
-  // });
 }
 
 function startTimer() {
-  // zeroTime();
   window.timerId = window.setInterval(timer, 1000);
-
-  // NEW_GAME.addEventListener("click", () => {
-  //   stopTimer();
-  //   // zeroTime();
-  // });
-
-  // CHOSEN_LEVEL.addEventListener("click", (e) => {
-  //   if (e.target.closest("button")) {
-  //     stopTimer();
-  //     // zeroTime();
-  //   }
-  // });
 }
 
 function stopTimer() {
