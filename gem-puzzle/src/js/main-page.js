@@ -24,13 +24,13 @@ let matrix;
 getCurrPositionLocalStorage();
 
 // let matrix = getMatrix(shuffledArray, chosenLevel);
-let startMatrix;
+// let startMatrix;
 
 // console.log(arrStart);
 // let arrStart = getArray(chosenLevel);
 // let shuffledArray = shuffle(arrStart);
 // let matrix = getMatrix(shuffledArray, chosenLevel);
-// let startMatrix = getMatrix(arrStart, chosenLevel);
+let startMatrix = getMatrix(arrStart, chosenLevel);
 
 // let results = [];
 let results;
@@ -95,8 +95,6 @@ NEW_GAME.addEventListener("click", clickNewGame);
   GAME.addEventListener("click", (e) => {
     toGame(e);
   });
-
-
 
 
 //-----показать ТОП-10 результатов
@@ -403,20 +401,18 @@ function chooseLevel(e) {
     setLevelLocalStorage(chosenLevel);
   });
 
-  // setLevelLocalStorage(chosenLevel);
-  // setLevelBtnLocalStorage(chosenLevel);
-  console.log("chosenLevel", chosenLevel);
+  // console.log("chosenLevel", chosenLevel);
 
   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
   chosenButton.classList.add("active");
 
   arrStart = getArray(chosenLevel);
   EMPTY_BTN_NUM = arrStart.length;
-  console.log("arrStart", arrStart);
+  // console.log("arrStart", arrStart);
   shuffledArray = shuffle(arrStart);
-  console.log("shuffledArray", shuffledArray);
+  // console.log("shuffledArray", shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
-  console.log("matrix", matrix);
+  // console.log("matrix", matrix);
   startMatrix = getMatrix(arrStart, chosenLevel);
 
   GAME.firstChild.remove();
@@ -453,7 +449,7 @@ function toGame(e) {
   if (ableMove) {
     moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
     setPosition(matrix, arrStart);
-    // setCurrPositionLocalStorage();
+ 
     COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
 
     SAVE_BTN.addEventListener("click", () => {
@@ -468,6 +464,8 @@ function toGame(e) {
   }
 
   isWin(matrix, startMatrix);
+  console.log('matrix', matrix)
+  console.log('startmatrix', startMatrix);
 }
 
 //------------------------получение координат
@@ -525,7 +523,7 @@ function timer() {
 }
 
 function startTimer() {
-  zeroTime();
+  // zeroTime();
   window.timerId = window.setInterval(timer, 1000);
 
   // NEW_GAME.addEventListener("click", () => {
@@ -552,7 +550,7 @@ function zeroTime() {
 
 //------------------------------проверка на выйгрыш
 function isWin(mat, startMat) {
-  if (JSON.stringify(mat) == JSON.stringify(startMat) || COUNTER.value == 3) {
+  if (JSON.stringify(mat) == JSON.stringify(startMat)) {
     BODY.append(createWinModal());
     setTimeout(() => {
       document.getElementById("modal").classList.add("show");
@@ -637,6 +635,7 @@ function getTimeLocalStorage() {
 //-------------кнопка уровня
 function setLevelBtnLocalStorage(chosenLevel) {
   localStorage.setItem("chosenLevelBtn", chosenLevel);
+  // console.log(choseLevel);
   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
   BTNS_LEVEL_ALL.forEach((el) => {
     if (el.value == chooseLevel) el.classList.add("active");
@@ -651,6 +650,23 @@ function getLevelBtnLocalStorage(choseLevel) {
     });
   } else LEVEL_4.classList.add("active");
 }
+
+// function setLevelBtnLocalStorage(chosenLevel) {
+//   localStorage.setItem("chosenLevelBtn", chosenLevel);
+//   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
+//   BTNS_LEVEL_ALL.forEach((el) => {
+//     if (el.value == chooseLevel) el.classList.add("active");
+//   });
+// }
+
+// function getLevelBtnLocalStorage(choseLevel) {
+//   if (localStorage.getItem("chosenLevelBtn")) {
+//     BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
+//     BTNS_LEVEL_ALL.forEach((el) => {
+//       if (el.value == choseLevel) el.classList.add("active");
+//     });
+//   } else LEVEL_4.classList.add("active");
+// }
 
 //--------------ходы
 function setMovesLocalStorage() {
