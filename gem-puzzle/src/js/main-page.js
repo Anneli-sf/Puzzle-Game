@@ -17,18 +17,44 @@ const levels = [3, 4, 5, 6, 7, 8];
 // let chosenLevel = levels[1];
 let chosenLevel;
 getLevelLocalStorage();
+// let arrStart;
 let arrStart = getArray(chosenLevel);
-let shuffledArray = shuffle(arrStart);
-let matrix = getMatrix(shuffledArray, chosenLevel);
-let startMatrix = getMatrix(arrStart, chosenLevel);
-let results = [];
+let shuffledArray;
+let matrix;
+getCurrPositionLocalStorage();
 
-// let matrix = getMatrix(arrStart, chosenLevel);
+// let matrix = getMatrix(shuffledArray, chosenLevel);
+let startMatrix;
+
+// console.log(arrStart);
+// let arrStart = getArray(chosenLevel);
+// let shuffledArray = shuffle(arrStart);
+// let matrix = getMatrix(shuffledArray, chosenLevel);
+// let startMatrix = getMatrix(arrStart, chosenLevel);
+let results = [];
 
 //------------------------загрузка страницы---------------------------
 // createBody(arrStart);
+
 createBody(shuffledArray);
 setPosition(matrix, arrStart);
+
+function setCurrPositionLocalStorage() {
+  localStorage.setItem("shuffledArray", JSON.stringify(shuffledArray));
+  localStorage.setItem("matrix", JSON.stringify(matrix));
+}
+
+function getCurrPositionLocalStorage() {
+  if (localStorage.getItem("shuffledArray")) {
+    shuffledArray = JSON.parse(localStorage.getItem("shuffledArray"));
+  } else {
+    shuffledArray = shuffle(arrStart);
+  }
+
+  if (localStorage.getItem("matrix")) {
+    matrix = JSON.parse(localStorage.getItem("matrix"));
+  } else matrix = getMatrix(shuffledArray, chosenLevel);
+}
 
 const NEW_GAME = document.getElementById("new-game");
 const GAME = document.getElementById("game");
@@ -125,21 +151,33 @@ function getLevelLocalStorage() {
   }
 }
 
+//-----------------время
+function setTimeLocalStorage() {
+  localStorage.setItem("min", min.value);
+  localStorage.setItem("sec", sec.value);
+}
 
-  
+function getTimeLocalStorage() {
+  if (localStorage.getItem("min")) {
+    min.value = localStorage.getItem("min");
+  } else min.value = "00";
 
-
+  if (localStorage.getItem("sec")) {
+    sec.value = localStorage.getItem("sec");
+  } else sec.value = "00";
+}
 
 //-------------кнопка уровня
 function setLevelBtnLocalStorage(chosenLevel) {
   localStorage.setItem("chosenLevelBtn", chosenLevel);
   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
-  BTNS_LEVEL_ALL.forEach((el) => {if(el.value == chooseLevel) el.classList.add('active')});
+  BTNS_LEVEL_ALL.forEach((el) => {
+    if (el.value == chooseLevel) el.classList.add("active");
+  });
 }
 
 function getLevelBtnLocalStorage(choseLevel) {
   if (localStorage.getItem("chosenLevelBtn")) {
-    
     BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
     BTNS_LEVEL_ALL.forEach((el) => {
       if (el.value == choseLevel) el.classList.add("active");
@@ -149,15 +187,14 @@ function getLevelBtnLocalStorage(choseLevel) {
 
 //--------------ходы
 function setMovesLocalStorage() {
-  localStorage.setItem('moves', COUNTER.value);
-  }
-  
-  function getMovesLocalStorage() {
-    if (localStorage.getItem('moves')) COUNTER.value = localStorage.getItem("moves");
-     else COUNTER.value = 0;
-  }
+  localStorage.setItem("moves", COUNTER.value);
+}
 
-
+function getMovesLocalStorage() {
+  if (localStorage.getItem("moves"))
+    COUNTER.value = localStorage.getItem("moves");
+  else COUNTER.value = 0;
+}
 
 //---------------------------------------------создание всего боди
 function createBody(arr) {
@@ -437,8 +474,6 @@ function clickNewGame() {
   );
 }
 
-
-
 //---------------------выбор уровня
 function chooseLevel(e) {
   const chosenButton = e.target.closest("button");
@@ -484,10 +519,6 @@ function chooseLevel(e) {
   );
 }
 
-
-
-
-
 //-----клик по фишкам
 function toGame(e) {
   const CURR_BTN = e.target.closest(".square");
@@ -499,10 +530,12 @@ function toGame(e) {
   if (ableMove) {
     moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
     setPosition(matrix, arrStart);
+    // setCurrPositionLocalStorage();
     COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
 
     SAVE_BTN.addEventListener("click", () => {
       setMovesLocalStorage();
+      setCurrPositionLocalStorage();
     });
     // setMovesLocalStorage();
   }
@@ -513,18 +546,6 @@ function toGame(e) {
   }
 
   isWin(matrix, startMatrix);
-
-  // NEW_GAME.addEventListener("click", () => {
-  //   stopTimer();
-  //   zeroTime()
-  // });
-
-  // CHOSEN_LEVEL.addEventListener("click", (e) => {
-  //   if (e.target.closest("button")) {
-  //     stopTimer();
-  //     zeroTime()
-  //   }
-  // });
 }
 
 //------------------------получение координат
@@ -581,32 +602,18 @@ function timer() {
   // });
 }
 
-function setTimeLocalStorage() {
-  localStorage.setItem('min', min.value);
-  localStorage.setItem('sec', sec.value);
-}
-
-function getTimeLocalStorage() {
-if (localStorage.getItem('min')) {min.value = localStorage.getItem('min')} 
-else min.value = "00";
-
-if (localStorage.getItem('sec')) {sec.value = localStorage.getItem('sec')} 
-else sec.value = "00";
-
-}
-
 function startTimer() {
   window.timerId = window.setInterval(timer, 1000);
 
   NEW_GAME.addEventListener("click", () => {
     stopTimer();
-    zeroTime()
+    zeroTime();
   });
 
   CHOSEN_LEVEL.addEventListener("click", (e) => {
     if (e.target.closest("button")) {
       stopTimer();
-      zeroTime()
+      zeroTime();
     }
   });
 }
@@ -638,8 +645,6 @@ function isWin(mat, startMat) {
       secs: sec.value,
       moves: COUNTER.value,
     });
-
-    
 
     // GAME.removeEventListener('click', toGame);
     console.log(results);
