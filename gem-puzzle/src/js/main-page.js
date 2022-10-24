@@ -94,6 +94,7 @@ GAME.addEventListener(
 //-----выбор уровня
 CHOSEN_LEVEL.addEventListener("click", (e) => {
   chooseLevel(e);
+  stopTimer();
   zeroTime();
 });
 
@@ -110,20 +111,8 @@ RESULTS_BTN.addEventListener("click", showBestResults);
 
 //-----сохранение результатов
 SAVE_BTN.addEventListener("click", () => {
-  // setLevelBtnLocalStorage();
-  // setMovesLocalStorage();
-  // setLevelLocalStorage();
-  // setTimeLocalStorage();
   setSoundLocalStorage();
 });
-
-// function setCityLocalStorage() {
-//   localStorage.setItem("city", CITY.value);
-// }
-
-// function getCityLocalStorage() {
-//   if (localStorage.getItem("city")) CITY.value = localStorage.getItem("city");
-// }
 
 //---------------------------------LOCAL STORAGE
 //-----------------звук
@@ -537,7 +526,6 @@ function toGame(e) {
       setMovesLocalStorage();
       setCurrPositionLocalStorage();
     });
-    // setMovesLocalStorage();
   }
 
   if (SOUND_BTN.checked == true) {
