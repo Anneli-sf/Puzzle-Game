@@ -31,7 +31,10 @@ let startMatrix;
 // let shuffledArray = shuffle(arrStart);
 // let matrix = getMatrix(shuffledArray, chosenLevel);
 // let startMatrix = getMatrix(arrStart, chosenLevel);
-let results = [];
+
+// let results = [];
+let results;
+getResultsLocalStorage()
 
 //------------------------загрузка страницы---------------------------
 // createBody(arrStart);
@@ -634,8 +637,22 @@ function isWin(mat, startMat) {
       moves: COUNTER.value,
     });
 
+    setResultsLocalStorage();
+
     // GAME.removeEventListener('click', toGame);
     console.log(results);
+  }
+}
+
+function setResultsLocalStorage() {
+  localStorage.setItem('results', JSON.stringify(results));
+}
+
+function getResultsLocalStorage() {
+  if (localStorage.getItem("results")) {
+    results = JSON.parse(localStorage.getItem("results"));
+  } else {
+    results = [];
   }
 }
 
@@ -643,6 +660,5 @@ function isWin(mat, startMat) {
 function showBestResults() {
   document.querySelector("tbody").innerHTML = ``;
   sortResults(results);
-  console.log(results);
   createTableRows();
 }
