@@ -41,6 +41,7 @@ const LEVEL_4 = document.getElementById("level-4");
 const BTNS_LEVEL_ALL = [...document.getElementsByClassName("btn-option")];
 // const MODAL_WIN = document.getElementById("modal");
 const RESULTS_BTN = document.getElementById("btn-results");
+const SAVE_BTN = document.getElementById("btn-save");
 
 let EMPTY_BTN_NUM = arrStart.length;
 let min = document.getElementById("mins");
@@ -50,10 +51,45 @@ let sec = document.getElementById("secs");
 // SOUND_BTN.checked = true;
 getSoundLocalStorage();
 getLevelBtnLocalStorage(chosenLevel);
+getMovesLocalStorage();
+getTimeLocalStorage();
 // if (!localStorage.getItem("level")) LEVEL_4.classList.add("active");
 
+GAME.addEventListener(
+  "click",
+  () => {
+    startTimer();
+  },
+  { once: true }
+);
 
-SOUND_BTN.addEventListener("click", setSoundLocalStorage);
+// SOUND_BTN.addEventListener("click", setSoundLocalStorage);
+
+//-----выбор уровня
+CHOSEN_LEVEL.addEventListener("click", (e) => {
+  chooseLevel(e);
+  zeroTime();
+});
+
+//-----клик по кнопке НОВАЯ ИГРА
+NEW_GAME.addEventListener("click", clickNewGame);
+
+//-----клик по фишкам
+GAME.addEventListener("click", (e) => {
+  toGame(e);
+});
+
+//-----показать ТОП-10 результатов
+RESULTS_BTN.addEventListener("click", showBestResults);
+
+//-----сохранение результатов
+SAVE_BTN.addEventListener("click", () => {
+  // setLevelBtnLocalStorage();
+  // setMovesLocalStorage();
+  // setLevelLocalStorage();
+  // setTimeLocalStorage();
+  setSoundLocalStorage();
+});
 
 // function setCityLocalStorage() {
 //   localStorage.setItem("city", CITY.value);
@@ -89,6 +125,11 @@ function getLevelLocalStorage() {
   }
 }
 
+
+  
+
+
+
 //-------------кнопка уровня
 function setLevelBtnLocalStorage(chosenLevel) {
   localStorage.setItem("chosenLevelBtn", chosenLevel);
@@ -104,32 +145,19 @@ function getLevelBtnLocalStorage(choseLevel) {
       if (el.value == choseLevel) el.classList.add("active");
     });
   } else LEVEL_4.classList.add("active");
-
 }
 
-GAME.addEventListener(
-  "click",
-  () => {
-    startTimer();
-  },
-  { once: true }
-);
+//--------------ходы
+function setMovesLocalStorage() {
+  localStorage.setItem('moves', COUNTER.value);
+  }
+  
+  function getMovesLocalStorage() {
+    if (localStorage.getItem('moves')) COUNTER.value = localStorage.getItem("moves");
+     else COUNTER.value = 0;
+  }
 
-//-----выбор уровня
-CHOSEN_LEVEL.addEventListener("click", (e) => {
-  chooseLevel(e);
-});
 
-//-----клик по кнопке НОВАЯ ИГРА
-NEW_GAME.addEventListener("click", clickNewGame);
-
-//-----клик по фишкам
-GAME.addEventListener("click", (e) => {
-  toGame(e);
-});
-
-//-----показать ТОП-10 результатов
-RESULTS_BTN.addEventListener("click", showBestResults);
 
 //---------------------------------------------создание всего боди
 function createBody(arr) {
@@ -254,7 +282,7 @@ function createHeader() {
   HEADER.innerHTML = `
         <nav class="nav">
               <button type="button" class="btn-nav btn btn-outline-primary" id="new-game">New Game</button>
-              <button type="button" class="btn-nav btn btn-outline-secondary">Save</button>
+              <button type="button" class="btn-nav btn btn-outline-secondary" id="btn-save">Save</button>
               <button type="button" class="btn-nav btn btn-outline-success" id="btn-results" data-bs-toggle="modal" data-bs-target="#resultsModul">Results</button>
         </nav>
         `;
@@ -397,6 +425,8 @@ function clickNewGame() {
   matrix = getMatrix(shuffledArray, chosenLevel);
   setPosition(matrix, arrStart);
   COUNTER.value = "0";
+  stopTimer();
+  zeroTime();
 
   GAME.addEventListener(
     "click",
@@ -412,10 +442,15 @@ function clickNewGame() {
 //---------------------выбор уровня
 function chooseLevel(e) {
   const chosenButton = e.target.closest("button");
-
   chosenLevel = +chosenButton.value;
-  setLevelLocalStorage(chosenLevel);
-  setLevelBtnLocalStorage(chosenLevel);
+
+  SAVE_BTN.addEventListener("click", () => {
+    setLevelBtnLocalStorage(chosenLevel);
+    setLevelLocalStorage(chosenLevel);
+  });
+
+  // setLevelLocalStorage(chosenLevel);
+  // setLevelBtnLocalStorage(chosenLevel);
   console.log("chosenLevel", chosenLevel);
 
   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
@@ -437,9 +472,8 @@ function chooseLevel(e) {
 
   document.getElementById(`${shuffledArray.length}id`).style.display = "none";
 
-  // GAME.addEventListener("click", () => {
-  //   isWin(matrix, startMatrix);
-  // });
+  // stopTimer();
+  // zeroTime()
 
   GAME.addEventListener(
     "click",
@@ -449,6 +483,10 @@ function chooseLevel(e) {
     { once: true }
   );
 }
+
+
+
+
 
 //-----клик по фишкам
 function toGame(e) {
@@ -462,6 +500,11 @@ function toGame(e) {
     moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
     setPosition(matrix, arrStart);
     COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
+
+    SAVE_BTN.addEventListener("click", () => {
+      setMovesLocalStorage();
+    });
+    // setMovesLocalStorage();
   }
 
   if (SOUND_BTN.checked == true) {
@@ -471,17 +514,17 @@ function toGame(e) {
 
   isWin(matrix, startMatrix);
 
-  NEW_GAME.addEventListener("click", () => {
-    stopTimer();
-  });
+  // NEW_GAME.addEventListener("click", () => {
+  //   stopTimer();
+  //   zeroTime()
+  // });
 
-  CHOSEN_LEVEL.addEventListener("click", (e) => {
-    if (e.target.closest("button")) {
-      stopTimer();
-    }
-  });
-
-  // setSoundLocalStorage();
+  // CHOSEN_LEVEL.addEventListener("click", (e) => {
+  //   if (e.target.closest("button")) {
+  //     stopTimer();
+  //     zeroTime()
+  //   }
+  // });
 }
 
 //------------------------получение координат
@@ -520,6 +563,13 @@ function timer() {
     sec.value = "00";
   }
 
+  SAVE_BTN.addEventListener("click", () => {
+    setTimeLocalStorage();
+    // stopTimer();
+  });
+
+  // setTimeLocalStorage();
+
   // NEW_GAME.addEventListener("click", () => {
   //   stopTimer();
   // });
@@ -531,22 +581,41 @@ function timer() {
   // });
 }
 
+function setTimeLocalStorage() {
+  localStorage.setItem('min', min.value);
+  localStorage.setItem('sec', sec.value);
+}
+
+function getTimeLocalStorage() {
+if (localStorage.getItem('min')) {min.value = localStorage.getItem('min')} 
+else min.value = "00";
+
+if (localStorage.getItem('sec')) {sec.value = localStorage.getItem('sec')} 
+else sec.value = "00";
+
+}
+
 function startTimer() {
   window.timerId = window.setInterval(timer, 1000);
 
   NEW_GAME.addEventListener("click", () => {
     stopTimer();
+    zeroTime()
   });
 
   CHOSEN_LEVEL.addEventListener("click", (e) => {
     if (e.target.closest("button")) {
       stopTimer();
+      zeroTime()
     }
   });
 }
 
 function stopTimer() {
   window.clearInterval(window.timerId);
+}
+
+function zeroTime() {
   sec.value = "00";
   min.value = "00";
 }
@@ -560,17 +629,17 @@ function isWin(mat, startMat) {
       document.querySelector(".btn-close-win").addEventListener("click", () => {
         document.getElementById("modal").remove("show");
       });
+      stopTimer();
     }, 1000);
-    // results.min.push(min.value);
-    // results.sec.push(sec.value);
-    // results.moves.push(COUNTER.value);
-    // results.level.push(chosenLevel);
+
     results.push({
       level: chosenLevel,
       mins: min.value,
       secs: sec.value,
       moves: COUNTER.value,
     });
+
+    
 
     // GAME.removeEventListener('click', toGame);
     console.log(results);
