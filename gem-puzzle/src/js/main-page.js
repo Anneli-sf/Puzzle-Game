@@ -49,10 +49,11 @@ let sec = document.getElementById("secs");
 // LEVEL_4.classList.add("active");
 // SOUND_BTN.checked = true;
 getSoundLocalStorage();
+getLevelBtnLocalStorage(chosenLevel);
+// if (!localStorage.getItem("level")) LEVEL_4.classList.add("active");
 
-SOUND_BTN.addEventListener('click', setSoundLocalStorage);
 
-
+SOUND_BTN.addEventListener("click", setSoundLocalStorage);
 
 // function setCityLocalStorage() {
 //   localStorage.setItem("city", CITY.value);
@@ -63,17 +64,47 @@ SOUND_BTN.addEventListener('click', setSoundLocalStorage);
 // }
 
 //---------------------------------LOCAL STORAGE
+//-----------------звук
 function setSoundLocalStorage() {
   localStorage.setItem("sound", SOUND_BTN.checked);
 }
 
 function getSoundLocalStorage() {
-  
   if (localStorage.getItem("sound")) {
     SOUND_BTN.checked = JSON.parse(localStorage.getItem("sound"));
   } else {
     SOUND_BTN.checked = true;
   }
+}
+//-----------------уровень
+function setLevelLocalStorage(chosenLevel) {
+  localStorage.setItem("level", chosenLevel);
+}
+
+function getLevelLocalStorage() {
+  if (localStorage.getItem("level")) {
+    chosenLevel = localStorage.getItem("level");
+  } else {
+    chosenLevel = levels[1];
+  }
+}
+
+//-------------кнопка уровня
+function setLevelBtnLocalStorage(chosenLevel) {
+  localStorage.setItem("chosenLevelBtn", chosenLevel);
+  BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
+  BTNS_LEVEL_ALL.forEach((el) => {if(el.value == chooseLevel) el.classList.add('active')});
+}
+
+function getLevelBtnLocalStorage(choseLevel) {
+  if (localStorage.getItem("chosenLevelBtn")) {
+    
+    BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
+    BTNS_LEVEL_ALL.forEach((el) => {
+      if (el.value == choseLevel) el.classList.add("active");
+    });
+  } else LEVEL_4.classList.add("active");
+
 }
 
 GAME.addEventListener(
@@ -376,22 +407,15 @@ function clickNewGame() {
   );
 }
 
-function setLevelLocalStorage() {
-  localStorage.setItem("level", chosenLevel);
-}
 
-function getLevelLocalStorage() {
-  if (localStorage.getItem("level")) chosenLevel = localStorage.getItem("level");
-  else {chosenLevel = levels[1];
-  LEVEL_4.classList.add("active");}
-}
 
 //---------------------выбор уровня
 function chooseLevel(e) {
   const chosenButton = e.target.closest("button");
-  
+
   chosenLevel = +chosenButton.value;
   setLevelLocalStorage(chosenLevel);
+  setLevelBtnLocalStorage(chosenLevel);
   console.log("chosenLevel", chosenLevel);
 
   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
@@ -459,7 +483,6 @@ function toGame(e) {
 
   // setSoundLocalStorage();
 }
-
 
 //------------------------получение координат
 function getPosition(number, mat) {
@@ -561,32 +584,3 @@ function showBestResults() {
   console.log(results);
   createTableRows();
 }
-
-// таблица счета
-// function showTableResults() {
-//   resultsArea.classList.add('show');
-
-//   scoreList = JSON.parse(window.localStorage.getItem('scoreList'));
-//   if (!scoreList) {
-//       scoreList = [];
-//   }
-
-//   let scoreUser = score;
-//   scoreItem[0] = scoreUser;
-//   scoreList.push(scoreItem);
-
-//   if (scoreList.length > 1 && scoreList.length < 11) {
-//       scoreList.sort(function(a, b) {
-//           return a - b;
-//       })
-//   }
-
-//   if (scoreList.length == 11) {
-
-//       scoreList = scoreList.slice(-10);
-//       scoreList.sort(function(a,b) {
-//           return a - b;
-//       });
-//   }
-
-//   window.localStorage.setItem('scoreList', JSON.stringify(scoreList));
