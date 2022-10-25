@@ -2,13 +2,17 @@ import { shuffle } from "./shuffle";
 import { getMatrix } from "./getMatrix";
 import { getArray } from "./getArray";
 import { sortResults } from "./sortResults";
-
+import sound from '../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3';
+import {solvableShufle} from './solvability';
 //------------------------КОНСТАНТЫ---------------------------
 
 const BODY = document.getElementById("body");
-const SOUND = new Audio(
-  "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3"
-);
+// const SOUND = new Audio(
+  // "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3"
+// );
+
+const SOUND = new Audio(sound)
+
 
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
@@ -363,7 +367,8 @@ function createTableRows() {
 //------------------------ИГРА---------------------------
 //-----клик по кнопке НОВАЯ ИГРА
 function clickNewGame() {
-  shuffledArray = shuffle(arrStart);
+  // shuffledArray = shuffle(arrStart);
+  shuffledArray = solvableShufle(arrStart, chosenLevel);
   matrix = getMatrix(shuffledArray, chosenLevel);
   setPosition(matrix, arrStart);
   
@@ -404,7 +409,8 @@ function chooseLevel(e) {
   arrStart = getArray(chosenLevel);
   EMPTY_BTN_NUM = arrStart.length;
   // console.log("arrStart", arrStart);
-  shuffledArray = shuffle(arrStart);
+  // shuffledArray = shuffle(arrStart);
+  shuffledArray = solvableShufle(arrStart, chosenLevel);
   // console.log("shuffledArray", shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
   // console.log("matrix", matrix);
@@ -459,8 +465,8 @@ function toGame(e) {
   }
 
   isWin(matrix, startMatrix);
-  console.log('matrix', matrix)
-  console.log('startmatrix', startMatrix);
+  // console.log('matrix', matrix)
+  // console.log('startmatrix', startMatrix);
 }
 
 //------------------------получение координат
@@ -660,7 +666,8 @@ function getCurrPositionLocalStorage() {
   if (localStorage.getItem("shuffledArray")) {
     shuffledArray = JSON.parse(localStorage.getItem("shuffledArray"));
   } else {
-    shuffledArray = shuffle(arrStart);
+    // shuffledArray = shuffle(arrStart);
+    shuffledArray = solvableShufle(arrStart, chosenLevel);
   }
 
   if (localStorage.getItem("matrix")) {
