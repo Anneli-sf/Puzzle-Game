@@ -165,7 +165,7 @@ function createItem(i) {
   // ITEM.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
 
   let w = 100 / chosenLevel;
-  console.log('при построении',chosenLevel)
+  // console.log('при построении',chosenLevel)
   ITEM.style.width = `${w}%`;
   ITEM.style.height = `${w}%`;
 
@@ -373,7 +373,7 @@ function createTableRows() {
 function clickNewGame() {
   // shuffledArray = shuffle(arrStart);
   shuffledArray = solvableShufle(arrStart, chosenLevel);
-  console.log('на выходе нью гейм', shuffledArray);
+  // console.log('на выходе нью гейм', shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
   setPosition(matrix, arrStart);
   
@@ -416,7 +416,7 @@ function chooseLevel(e) {
   // console.log("arrStart", arrStart);
   // shuffledArray = shuffle(arrStart);
   shuffledArray = solvableShufle(arrStart, chosenLevel);
-  console.log('на выходе уровень', shuffledArray);
+  // console.log('на выходе уровень', shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
   // console.log("matrix", matrix);
   startMatrix = getMatrix(arrStart, chosenLevel);
@@ -588,7 +588,7 @@ function getSoundLocalStorage() {
 }
 //-----------------уровень
 function setLevelLocalStorage() {
-  console.log('лквел', chosenLevel);
+  // console.log('лквел', chosenLevel);
   localStorage.setItem("level", chosenLevel);
 }
 
