@@ -50,12 +50,10 @@ function SwapTilesForSolvable(array) {
   }
 }
 
-// export
 function getTileIndex(array, id) {
   return array.findIndex((el) => el === id);
 }
 
-// export
 function solvableShufle(array, size) {
   const result = shuffle(array);
   const numberInverions = countInversions(result);
@@ -69,7 +67,6 @@ function solvableShufle(array, size) {
   return result;
 }
 
-// export default
 function swapTwoElements(array, indexFirst, indexSecond) {
   const arr = array;
   [arr[indexFirst], arr[indexSecond]] = [arr[indexSecond], arr[indexFirst]];
