@@ -36,13 +36,13 @@ let startMatrix = getMatrix(arrStart, chosenLevel);
 
 // let results = [];
 let results;
-let winner = false;
 getResultsLocalStorage();
 
 //------------------------загрузка страницы---------------------------
 // createBody(arrStart);
 
 createBody(shuffledArray);
+// console.log('на выходе', shuffledArray);
 setPosition(matrix, arrStart);
 
 const NEW_GAME = document.getElementById("new-game");
@@ -66,6 +66,7 @@ let sec = document.getElementById("secs");
 // SOUND_BTN.checked = true;
 getSoundLocalStorage();
 getLevelBtnLocalStorage(chosenLevel);
+// setLevelLocalStorage(chosenLevel);
 getMovesLocalStorage();
 getTimeLocalStorage();
 
@@ -102,6 +103,8 @@ RESULTS_BTN.addEventListener("click", showBestResults);
 //-----сохранение результатов
 SAVE_BTN.addEventListener("click", () => {
   setSoundLocalStorage();
+  setMovesLocalStorage();
+  setCurrPositionLocalStorage();
 });
 
 //---------------------------------------------создание всего боди
@@ -162,6 +165,7 @@ function createItem(i) {
   // ITEM.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
 
   let w = 100 / chosenLevel;
+  console.log('при построении',chosenLevel)
   ITEM.style.width = `${w}%`;
   ITEM.style.height = `${w}%`;
 
@@ -369,6 +373,7 @@ function createTableRows() {
 function clickNewGame() {
   // shuffledArray = shuffle(arrStart);
   shuffledArray = solvableShufle(arrStart, chosenLevel);
+  console.log('на выходе нью гейм', shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
   setPosition(matrix, arrStart);
   
@@ -411,7 +416,7 @@ function chooseLevel(e) {
   // console.log("arrStart", arrStart);
   // shuffledArray = shuffle(arrStart);
   shuffledArray = solvableShufle(arrStart, chosenLevel);
-  // console.log("shuffledArray", shuffledArray);
+  console.log('на выходе уровень', shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
   // console.log("matrix", matrix);
   startMatrix = getMatrix(arrStart, chosenLevel);
@@ -419,6 +424,7 @@ function chooseLevel(e) {
   GAME.firstChild.remove();
   GAME.append(createGameWrapper(shuffledArray));
   setPosition(matrix, arrStart);
+  
   
 
   document.getElementById(`${shuffledArray.length}id`).style.display = "none";
@@ -581,7 +587,8 @@ function getSoundLocalStorage() {
   }
 }
 //-----------------уровень
-function setLevelLocalStorage(chosenLevel) {
+function setLevelLocalStorage() {
+  console.log('лквел', chosenLevel);
   localStorage.setItem("level", chosenLevel);
 }
 
@@ -613,9 +620,9 @@ function getTimeLocalStorage() {
 function setLevelBtnLocalStorage(chosenLevel) {
   localStorage.setItem("chosenLevelBtn", chosenLevel);
   // console.log(choseLevel);
-  BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
+  // BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
   BTNS_LEVEL_ALL.forEach((el) => {
-    if (el.value == chooseLevel) el.classList.add("active");
+    if (el.value == chosenLevel) el.classList.add("active");
   });
 }
 

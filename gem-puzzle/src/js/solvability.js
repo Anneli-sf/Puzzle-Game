@@ -42,8 +42,10 @@ function SwapTilesForSolvable(array) {
   const { length: len } = array;
 
   if (len < 2) return;
+// console.log(array[0]);
+// console.log(array[1]);
 
-  if (array[0] !== 0 && array[1] !== 0) {
+  if (array[0] !== array.length && array[1] !== array.length) {
     swapTwoElements(array, 0, 1);
   } else {
     swapTwoElements(array, len - 1, len - 2);
@@ -56,9 +58,12 @@ function getTileIndex(array, id) {
 
 function solvableShufle(array, size) {
   const result = shuffle(array);
+//   console.log('shuffleArray', result);
   const numberInverions = countInversions(result);
   const emptyTilePosition = getTileIndex(result, array.length);
+//   console.log('emptyTilePosition', emptyTilePosition)
   const isSolvable = isFieldSolvable(numberInverions, size, emptyTilePosition);
+    // console.log('isSolvable', isSolvable);
 
   if (!isSolvable) {
     SwapTilesForSolvable(result);
