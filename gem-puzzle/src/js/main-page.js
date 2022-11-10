@@ -2,17 +2,16 @@ import { shuffle } from "./shuffle";
 import { getMatrix } from "./getMatrix";
 import { getArray } from "./getArray";
 import { sortResults } from "./sortResults";
-import sound from '../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3';
-import {solvableShufle} from './solvability';
+import sound from "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3";
+import { solvableShufle } from "./solvability";
 //------------------------КОНСТАНТЫ---------------------------
 
 const BODY = document.getElementById("body");
 // const SOUND = new Audio(
-  // "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3"
+// "../images/sound/perkussiya-odinochnyiy-derevyannyiy-zvonkiy.mp3"
 // );
 
-const SOUND = new Audio(sound)
-
+const SOUND = new Audio(sound);
 
 //------------------------ПЕРЕМЕННЫЕ---------------------------
 
@@ -70,15 +69,13 @@ getLevelBtnLocalStorage(chosenLevel);
 getMovesLocalStorage();
 getTimeLocalStorage();
 
-
-
-  GAME.addEventListener(
-    "click",
-    () => {
-      startTimer();
-    },
-    { once: true }
-  );
+GAME.addEventListener(
+  "click",
+  () => {
+    startTimer();
+  },
+  { once: true }
+);
 
 //-----выбор уровня
 CHOSEN_LEVEL.addEventListener("click", (e) => {
@@ -92,10 +89,9 @@ NEW_GAME.addEventListener("click", clickNewGame);
 
 //-----клик по фишкам
 
-  GAME.addEventListener("click", (e) => {
-    toGame(e);
-  });
-
+GAME.addEventListener("click", (e) => {
+  toGame(e);
+});
 
 //-----показать ТОП-10 результатов
 RESULTS_BTN.addEventListener("click", showBestResults);
@@ -376,10 +372,9 @@ function clickNewGame() {
   // console.log('на выходе нью гейм', shuffledArray);
   matrix = getMatrix(shuffledArray, chosenLevel);
   setPosition(matrix, arrStart);
-  
+
   stopTimer();
   zeroTime();
-  
 
   if (+COUNTER.value) {
     GAME.addEventListener(
@@ -389,11 +384,9 @@ function clickNewGame() {
       },
       { once: true }
     );
-  } 
+  }
 
   COUNTER.value = "0";
-
-  
 }
 
 //---------------------выбор уровня
@@ -424,13 +417,11 @@ function chooseLevel(e) {
   GAME.firstChild.remove();
   GAME.append(createGameWrapper(shuffledArray));
   setPosition(matrix, arrStart);
-  
-  
 
   document.getElementById(`${shuffledArray.length}id`).style.display = "none";
 
   stopTimer();
-  zeroTime()
+  zeroTime();
 
   if (+COUNTER.value) {
     GAME.addEventListener(
@@ -446,7 +437,6 @@ function chooseLevel(e) {
 
 //-----клик по фишкам
 function toGame(e) {
-  
   const CURR_BTN = e.target.closest(".square");
   const BTN_NUM = +CURR_BTN.id.slice(0, -2);
   const BTN_COORD = getPosition(BTN_NUM, matrix);
@@ -456,7 +446,7 @@ function toGame(e) {
   if (ableMove) {
     moveBTN(BTN_COORD, EMPTY_BTN_COORD, matrix);
     setPosition(matrix, arrStart);
- 
+
     COUNTER.value = parseInt(COUNTER.value) + 1; //счетчик ходов
 
     SAVE_BTN.addEventListener("click", () => {
@@ -515,7 +505,6 @@ function timer() {
     setTimeLocalStorage();
     // stopTimer();
   });
-
 }
 
 function startTimer() {
@@ -620,7 +609,6 @@ function getTimeLocalStorage() {
 function setLevelBtnLocalStorage(chosenLevel) {
   localStorage.setItem("chosenLevelBtn", chosenLevel);
   // console.log(choseLevel);
-  // BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
   BTNS_LEVEL_ALL.forEach((el) => {
     if (el.value == chosenLevel) el.classList.add("active");
   });
@@ -634,23 +622,6 @@ function getLevelBtnLocalStorage(choseLevel) {
     });
   } else LEVEL_4.classList.add("active");
 }
-
-// function setLevelBtnLocalStorage(chosenLevel) {
-//   localStorage.setItem("chosenLevelBtn", chosenLevel);
-//   BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
-//   BTNS_LEVEL_ALL.forEach((el) => {
-//     if (el.value == chooseLevel) el.classList.add("active");
-//   });
-// }
-
-// function getLevelBtnLocalStorage(choseLevel) {
-//   if (localStorage.getItem("chosenLevelBtn")) {
-//     BTNS_LEVEL_ALL.forEach((el) => el.classList.remove("active"));
-//     BTNS_LEVEL_ALL.forEach((el) => {
-//       if (el.value == choseLevel) el.classList.add("active");
-//     });
-//   } else LEVEL_4.classList.add("active");
-// }
 
 //--------------ходы
 function setMovesLocalStorage() {
